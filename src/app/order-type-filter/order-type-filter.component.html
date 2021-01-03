@@ -1,0 +1,12 @@
+<mat-form-field>
+    <mat-label>Тип обработки</mat-label>
+    <mat-select [formControl]="orderTypesFormControl" multiple>
+      <mat-select-trigger>
+        {{orderTypesFormControl.value ? getSelectionDescription(orderTypesFormControl.value[0]) : ''}}
+        <span *ngIf="orderTypesFormControl.value?.length > 1" class="example-additional-selection">
+          (+{{orderTypesFormControl.value.length - 1}} {{orderTypesFormControl.value?.length === 2 ? 'другой' : 'других'}})
+        </span>
+      </mat-select-trigger>
+      <mat-option *ngFor="let orderType of orderTypes" [value]="orderType.code">{{orderType.description}}</mat-option>
+    </mat-select>
+  </mat-form-field>

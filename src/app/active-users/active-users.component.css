@@ -1,0 +1,15 @@
+.container {
+    display: grid;
+    grid-template-columns: 24px 24px 24px 24px 24px 24px;
+    grid-row: auto;
+}
+
+.container > img {
+    width: 24px;
+}
+.container-item {
+    font-size: 16pt;
+    align-self: center;
+    place-self: center;
+    
+}
