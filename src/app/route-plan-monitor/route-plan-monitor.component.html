@@ -1,0 +1,211 @@
+<mat-expansion-panel [expanded]="filterPanelOpenState"  (opened)="filterPanelOpenState" (closed)="!filterPanelOpenState">
+    <mat-expansion-panel-header>
+        <mat-panel-title>Фильтр поиска</mat-panel-title>
+        <mat-panel-description>
+           <!-- описание-->
+        </mat-panel-description>
+    </mat-expansion-panel-header>
+    <!--OrderType Filter -->
+    <mat-form-field>
+        <mat-label>Тип обработки</mat-label>
+        <mat-select [formControl]="orderTypesFormControl" multiple>
+        <mat-select-trigger>
+            {{orderTypesFormControl.value ? getOrderTypeDescription(orderTypesFormControl.value[0]) : ''}}
+            <span *ngIf="orderTypesFormControl.value?.length > 1">
+            (+{{orderTypesFormControl.value.length - 1}} {{orderTypesFormControl.value?.length === 2 ? 'другой' : 'других'}})
+            </span>
+        </mat-select-trigger>
+        <mat-option *ngFor="let orderType of orderTypes" [value]="orderType.code">{{orderType.description}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    &nbsp;
+    <!-- end of orderType Filter -->
+    <!-- фильтр по датам -->
+    <mat-form-field>
+        <mat-label>Дата с</mat-label>
+        <input matInput [matDatepicker]="startDate1" [formControl]="startDate">
+        <mat-datepicker-toggle matSuffix [for]="startDate1"></mat-datepicker-toggle>
+        <mat-datepicker #startDate1></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>по</mat-label>
+        <input matInput [matDatepicker]="endDate1" [formControl]="endDate">
+        <mat-datepicker-toggle matSuffix [for]="endDate1"></mat-datepicker-toggle>
+        <mat-datepicker #endDate1></mat-datepicker>
+    </mat-form-field>
+    &nbsp;
+    <!-- конец фильтр по датам -->
+    <!--фильтр по направлению-->
+    <mat-form-field>
+        <mat-label>Направление</mat-label>
+        <mat-select [formControl]="destinationConrol" multiple>
+            <mat-select-trigger>
+            {{destinationConrol.value ? destinationConrol.value[0] : ''}}
+            <span *ngIf="destinationConrol.value?.length > 1" class="example-additional-selection">
+                (+{{destinationConrol.value.length - 1}} {{destinationConrol.value?.length === 2 ? 'другой' : 'других'}})
+            </span>
+            </mat-select-trigger>
+            <mat-option *ngFor="let destination of destinations" [value]="destination">{{destination}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    &nbsp;
+    <!--конец фильтр по направлению-->
+    <!--Фильтр по статусам-->
+    <mat-form-field>
+        <mat-label>Статус</mat-label>
+        <mat-select [formControl]="statusesFormControl" multiple>
+            <mat-select-trigger>
+            {{statusesFormControl.value ? getStatusDescription(statusesFormControl.value[0]) : ''}}
+            <span *ngIf="statusesFormControl.value?.length > 1" class="example-additional-selection">
+                (+{{statusesFormControl.value.length - 1}} {{statusesFormControl.value?.length === 2 ? 'другой' : 'других'}})
+            </span>
+            </mat-select-trigger>
+            <mat-option *ngFor="let status of statuses" [value]="status.code">{{status.description}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    &nbsp;
+    <!--конец фильтр по статусам-->
+    <!--Галочка по сменам -->
+    <mat-checkbox class="shift_checkbox" [(ngModel)]="byShiftCheckBoxControl" color="primary">По сменам</mat-checkbox>
+    &nbsp;
+    <mat-checkbox class="showdates_checkbox" [(ngModel)]="showDates" color="primary" >Показывать даты</mat-checkbox>
+    &nbsp;
+    <!-- конец Галочка по сменам -->
+    <!-- Кнопка поиска-->
+    <span class="search_btn">
+        <button mat-icon-button aria-label="Кнопка поиска" (click)="searchClicked()">
+        <mat-icon>search</mat-icon>
+        </button>
+    </span>
+    <!--конец Кнопка поиска-->
+
+</mat-expansion-panel>
+
+
+<!-- HeaderTable-->
+<p-table [value]="dataSource" styleClass="p-datatable-gridlines">
+  <ng-template pTemplate="header">
+      <tr>
+          <th class="th_header_small">Задачи план.</th>
+          <th class="th_header_small">Задачи факт.</th>
+          <th class="th_header_small">Задачи ост.</th>
+          <th class="th_header_small">Вес план.</th>
+          <th class="th_header_small">Вес факт.</th>
+          <th class="th_header_small">Вес ост.</th>
+          <th class="th_header_small">Объем план.</th>
+          <th class="th_header_small">Объем факт.</th>
+          <th class="th_header_small">Объем ост.</th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-item>
+      <tr>
+          <td class="td_detail">{{item.planedTasks}}</td>
+          <td class="td_detail">{{item.realTasks}}</td>
+          <td class="td_detail">{{item.remindedTasks}} </td>
+          <td class="td_detail">{{item.planedWeight}}</td>
+          <td class="td_detail">{{item.realWeight}} </td>
+          <td class="td_detail">{{item.remindedWeight}} </td>
+          <td class="td_detail">{{item.planedCube}} </td>
+          <td class="td_detail">{{item.realCube}} </td>
+          <td class="td_detail">{{item.remindedCube}} </td>
+      </tr>
+  </ng-template>
+</p-table>
+  <!--end  HeaderTable-->
+
+<br>
+
+<p-contextMenu #cm [model]="menuItems"></p-contextMenu>
+
+<p-table  class="p-datatable-sm" 
+          [value]="detailDataSource" 
+          [paginator]="true" [rows]="10" [showCurrentPageReport]="true" 
+          currentPageReportTemplate="Показанно с {first} по {last} из {totalRecords} записей" [rowsPerPageOptions]="[5,10,25,50,100]"
+          [loading]="loading" dataKey="rowId " 
+          [(contextMenuSelection)]="selectedDetail" [contextMenu]="cm"
+          >
+  <ng-template pTemplate="header">
+      <tr>
+        <th class="th_header" *ngIf="false">№</th>
+        <th class="th_header" pSortableColumn="deliveryDate">Дата<br>ожидания<br>отгрузки<p-sortIcon field="deliveryDate"></p-sortIcon></th>
+        <th class="th_header" pSortableColumn="loadUsr2">Рейс<p-sortIcon field="loadUsr2"></p-sortIcon></th>
+        <th colspan="2" class="th_header" pSortableColumn="route">На&shy;пра&shy;вле&shy;ние<p-sortIcon field="route"></p-sortIcon></th>
+        <th class="th_header">Док-к ВСЕГО</th>
+        <th class="th_header">Док-к<br>осталось</th>
+        <th class="th_header">Док-к<br>оста&shy;лось конт&shy;роль</th>
+        <th class="th_header">Собрано<br>%</th>
+        <th class="th_header">Конт&shy;роль<br>%</th>
+        <th class="th_header">Упаковано<br>%</th>
+        <th class="th_header">Загру&shy;жено<br>%</th>
+        <th class="th_header">Проблемы</th>
+        <th class="th_header">ЕЗУК</th>
+        <th class="th_header">ДОК</th>
+        <th class="th_header">Объем,<br>куб.м.</th>
+        <th class="th_header">Вес,<br>тонн</th>
+        <th class="th_header">Кол&shy;во отгру&shy;же&shy;нных<br>мест</th>
+        <th class="th_header" pSortableColumn="status">Статус<p-sortIcon field="status"></p-sortIcon></th>
+        <th class="th_header">Кла&shy;до&shy;вщик<br>экс&shy;пе&shy;ди&shy;ции</th>
+        <th class="th_header">Води&shy;тель</th>
+        <th class="th_header">Экспе&shy;дитор</th>
+       
+        <th class="th_header" *ngIf="showDates"> Дата и время</th>
+        <th class="th_header" *ngIf="showDates">Го&shy;тов&shy;ность рейса</th>
+        <th class="th_header" *ngIf="showDates">При&shy;бытие ТС</th>
+        <th class="th_header" *ngIf="showDates">Начало<br>погрузки</th>
+        <th class="th_header" *ngIf="showDates">Окончание<br>загрузки</th>
+        <th class="th_header" *ngIf="showDates">Про&shy;должи&shy;тель&shy;ность</th>
+        <th class="th_header" *ngIf="showDates">Отг&shy;ру&shy;зка</th>
+        <th class="th_header" *ngIf="showDates">Убытие<Br>ТС</th>
+        <th class="th_header" width="6%">Приоритет</th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-item>
+      <tr [pContextMenuRow]="item">
+          <td [class]="getStyleByShift(item)" *ngIf="false">{{item.rowId}}</td>
+          <td [class]="getStyleByShift(item)">{{item.deliveryDate | date:'dd.MM.yyyy'}}</td>
+          <td [class]="getStyleByShift(item)"><a href="#" class="p-text-center">{{item.loadUsr2}}</a>  </td>
+          <td colspan="2" [class]="getStyleByShift(item)">{{item.route}}</td>
+          <td [class]="getStyleByShift(item)">{{item.itemsInRoute}} </td>
+          <td [class]="getStyleByShift(item)">{{item.leftToPick}} </td>
+          <td [class]="getStyleByShift(item)">{{item.leftToControl}} </td>
+          <td [class]="getStyleByShift(item)">{{item.picked}} </td>
+          <td [class]="getStyleByShift(item)">{{item.controlled}} </td>
+          <td [class]="getStyleByShift(item)">{{item.packed}} </td>
+          <td [class]="getStyleByShift(item)">{{item.loaded}} </td>
+          <td [class]="getRowColor(item)">
+            <a *ngIf="item.showReason === 1"class="p-text-center exclamation-marks" [routerLink]="['/problems']"  [queryParams]="{ externalloadid: item.externalloadid, loadusr2: item.loadUsr2}" >!!!</a>
+            <div *ngIf="item.showReason != 1"class="p-text-center">Нет</div>
+          </td>
+          <td [class]="getStyleByShift(item)"><div class="p-text-center"> </div>{{item.packingLocation}} </td>
+          <td [class]="getStyleByShift(item)">{{item.door}} </td>
+          <td [class]="getStyleByShift(item)">{{item.stdCube}} </td>
+          <td [class]="getStyleByShift(item)">{{item.stdGrossWgt}} </td>
+          <td [class]="getStyleByShift(item)">{{item.shippedItems}} </td>
+          <td [class]="getStyleByShift(item)">{{item.status}} </td>
+
+          <td [class]="getStyleByShift(item)">{{item.susr2}} </td>
+          <td [class]="getStyleByShift(item)">{{item.driverName}} </td>
+          <td [class]="getStyleByShift(item)">{{item.loadUsr1}} </td>
+
+          <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.addDate | date:'dd.MM.yyyy'}} </td>
+          <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.routeReady | date:'dd.MM.yyyy'}} </td>
+          <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.actualArrivalDate | date:'dd.MM.yyyy'}} </td>
+          <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.loadStart | date:'dd.MM.yyyy'}} </td>
+          <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.loadEnd | date:'dd.MM.yyyy'}} </td>
+          <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.loadDuration}} </td>
+          <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.shipped | date:'dd.MM.yyyy'}} </td>
+          <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.truckLeaving | date:'dd.MM.yyyy'}}</td>
+          <td class="td_detail_buttons" >
+            <span>
+              <span *ngIf="item.replenishmentTask == 'Детали'">
+                  <button pButton pRipple type="button" icon="pi pi-list" class="p-button-rounded p-button-text p-button-plain" (click)="gotoReplenishmentTask(item)"></button>
+              </span>
+              <button pButton pRipple type="button" icon="pi pi-caret-up" class="p-button-rounded p-button-text p-button-plain"></button>
+              <button pButton pRipple type="button" icon="pi pi-caret-down" class="p-button-rounded p-button-text p-button-plain"></button>
+          </span> 
+          </td>
+
+      </tr>
+ 
+  </ng-template>
+</p-table>

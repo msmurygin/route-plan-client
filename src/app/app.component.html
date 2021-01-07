@@ -1,7 +1,31 @@
 
-<span> 
-    <active-users></active-users> &nbsp; 
-    <order-type-filter></order-type-filter>
-    <destination-filer></destination-filer>
-    <status-filter></status-filter>
-</span>
+<p>
+    <mat-toolbar color="primary">
+      <button mat-icon-button class="example-icon" aria-label="Меню" [matMenuTriggerFor]="menu">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>План рейсов</span>
+      <span class="example-spacer"></span>
+      <button mat-icon-button class="example-icon" aria-label="Вход">
+        <mat-icon>exit_to_app</mat-icon>
+      </button>
+    </mat-toolbar>
+  </p>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item>
+      <mat-icon>sticky_note_2</mat-icon>
+      <span>Работа с претензиями</span>
+    </button>
+    <button mat-menu-item disabled>
+      <mat-icon>tab_unselected</mat-icon>
+      <span>План рейсов</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>settings</mat-icon>
+      <span>Настройки</span>
+    </button>
+  </mat-menu>
+ 
+<div class="container">
+    <router-outlet></router-outlet>
+</div>

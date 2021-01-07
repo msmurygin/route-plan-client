@@ -1,0 +1,89 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.search_btn, .shift_checkbox, .showdates_checkbox {
+    margin-left: 20px;
+}
+
+
+.styled-table {
+    margin-left: 5px!important;;
+    margin-right: 5px!important;
+    border-collapse: collapse!important;;
+    margin: 25px 0!important;
+    border-radius: 5px!important;
+    box-shadow: 0 0 20px rgb(184, 184, 184);
+}
+.th_header {
+      padding: 0!important;
+    font-size: 0.7em!important;
+    text-align: center!important;
+    background-color: rgba(211, 211, 211, 0.801)!important;
+    border-bottom: 1px solid #3f51b5!important;
+}
+
+.th_header_small {
+    padding: 0!important;
+    font-size: 0.7em!important;
+    text-align: center!important;
+    background-color: rgba(211, 211, 211, 0.486)!important;
+    border-bottom: 1px solid #3f51b5!important;
+}
+
+.td_detail_day {
+    padding: 2px 2px 2px 2px !important;
+    word-wrap: break-word;
+    font-size : 0.7em!important;
+    text-align: left!important;
+    color: #000000!important;
+    background-color: rgba(211, 211, 211, 0.109)
+}
+
+.td_detail_night {
+    padding: 2px 2px 2px 2px !important;
+    word-wrap: break-word;
+    font-size : 0.8em!important;
+    text-align: left!important;
+    color: #000000!important;
+    background-color: rgb(	250, 250, 210)
+}
+
+.td_detail {
+    padding: 2px 2px 2px 2px !important;
+    word-wrap: break-word;
+    font-size : 0.7em!important;
+    font-weight: bold;
+    text-align: center!important;
+    color: #6c757d!important;
+    background-color: #E3F2FD; /*rgba(211, 211, 211, 0.109)*/
+}
+
+.td_detail_buttons {
+    flex: auto;
+    padding: 0!important;
+    background-color: rgba(211, 211, 211, 0.109); 
+}
+.td_detail_buttons > span {
+    flex: auto;
+    text-align: right;
+  
+}
+
+.exclamation-marks{
+    color: rgb(104, 0, 0);
+    font-weight: bold;
+    font-size: 1em;
+    text-align: center!important;
+}
+
+.td_detail-no-word-wrap {
+    overflow: hidden!important;
+    padding: 2px 2px 2px 2px !important;
+    font-size : 0.6em!important;
+    text-align: center!important;
+    color: #000000!important;
+    background-color: rgba(211, 211, 211, 0.109)
+}
+
+
