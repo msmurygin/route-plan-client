@@ -35,7 +35,7 @@ export class ReplenishmentTaskComponent implements OnInit {
   }
 
   doPost(req :ReplenishmentTaskRequestBody){
-    this.service.postTableData<ReplenishmentTaskRequestBody>(ControllerURL.REPLENISHMENT_TASK_URL, req).subscribe(response =>{
+    this.service.post<ReplenishmentTaskRequestBody>(ControllerURL.REPLENISHMENT_TASK_URL, req).subscribe(response =>{
       this.loading = false;
       console.log(response['replenishmentTasks'])
       this.replTaskDataSource = response['replenishmentTasks']

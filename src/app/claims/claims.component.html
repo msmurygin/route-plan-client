@@ -1,0 +1,93 @@
+<p-toast></p-toast>
+<mat-form-field>
+    <mat-label>Дата с</mat-label>
+    <input matInput [matDatepicker]="startDate1" [formControl]="startDate">
+    <mat-datepicker-toggle matSuffix [for]="startDate1"></mat-datepicker-toggle>
+    <mat-datepicker #startDate1></mat-datepicker>
+</mat-form-field>
+&nbsp;
+<mat-form-field>
+    <mat-label>по</mat-label>
+    <input matInput [matDatepicker]="endDate1" [formControl]="endDate">
+    <mat-datepicker-toggle matSuffix [for]="endDate1"></mat-datepicker-toggle>
+    <mat-datepicker #endDate1></mat-datepicker>
+</mat-form-field>
+    &nbsp; 
+<mat-form-field class="example-form-field">
+    <mat-label>Клиент</mat-label>
+    <input matInput type="text" [(ngModel)]="client">
+</mat-form-field>
+&nbsp; 
+<mat-form-field class="fio">
+    <mat-label>ФИО виновного</mat-label>
+    <input matInput type="text" [(ngModel)]="guilty">
+</mat-form-field>
+<span class="show-all-claims">
+    <mat-checkbox class="shift_checkbox" [(ngModel)]="showAllClaims" color="primary">Вывод всего списка претензий</mat-checkbox>            
+</span>
+<br>
+<span class="show-claims-by">
+    <h3>Показать претензии, по которым нужно:</h3>
+    <mat-checkbox class="shift_checkbox" [(ngModel)]="showCheck" color="primary">выполнить проверку</mat-checkbox>
+    &nbsp;&nbsp;<mat-checkbox class="shift_checkbox" [(ngModel)]="showSend" color="primary">отправить подтверждение</mat-checkbox>
+    &nbsp;&nbsp;<mat-checkbox class="shift_checkbox" [(ngModel)]="showAll" color="primary">Показать все претензии</mat-checkbox>    
+</span>
+
+<span class="skus-in-claims">
+    <h3>Товар(ы) содержащийся(еся) в претензии:</h3>
+    <p-multiSelect [options]="skuclaimsDataSource" [(ngModel)]="selectedSkuClaims" 
+        defaultLabel="Выбор товаров" optionLabel="name"
+        display="chip">
+    </p-multiSelect>
+
+    <button mat-icon-button aria-label="Кнопка поиска" (click)="searchClicked()">
+        <mat-icon>upload</mat-icon>
+    </button>
+</span>
+<!-- Кнопка поиска-->
+<button mat-button color="primary" (click)="searchClicked()">Поиск</button>
+<!--конец Кнопка поиска-->
+
+<div style="padding: 5px;">
+<p-table  [resizableColumns]="true" styleClass="p-datatable-sm" [value]="claimsDataSource" 
+[totalRecords]="totalRecords" [loading]="loading"
+[paginator]="true" [rows]="10" [showCurrentPageReport]="true" 
+currentPageReportTemplate="Показанно с {first} по {last} из {totalRecords} записей" [rowsPerPageOptions]="[5,10,25,50,100]"
+dataKey="id">
+    <ng-template pTemplate="header">
+        <tr>
+            <th  class="th_header_small" width="7%">№ претензии</th>
+            <th  class="th_header_small" width="10%">Рейс</th>
+            <th  class="th_header_small">Клиент</th>
+            <th  class="th_header_small" width="7%">Дата поступления<br> притензии</th>
+            <th  class="th_header_small" width="7%">Дата и время загрузки <br>притензии на склад</th>
+            <th  class="th_header_small" width="7%">Кол-во строк<br> в притензии</th>
+            <th  class="th_header_small" width="7%">Кол-во проверенных<br> строк</th>
+            <th  class="th_header_small" width="7%">Сумма,<br>руб.</th>
+            <th  class="th_header_small" width="3%"></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item>
+        <tr>
+            <td class="td_detail">
+            <a [routerLink]="[NAVIGATION.CLAIMS_DETAIL.url]" 
+                 [queryParams]="{ claimsNumber: item.id, addDate: item.addDate, dateOfArrival: item.dateOfArrival, client: item.client }">
+                    {{item.id}}
+              </a>  
+            </td>
+            <td class="td_detail">{{item.externalLoadId}}</td>
+            <td class="td_detail">{{item.client}}</td>
+            <td class="td_detail">{{item.addDate}}</td>
+            <td class="td_detail">{{item.dateOfArrival}} </td>
+            <td class="td_detail">{{item.linesCount}} </td>
+            <td class="td_detail">{{item.linesCountChecked}}</td>
+            <td class="td_detail">{{item.cost}}</td>
+            <td class="td_detail">
+                <span *ngIf="item.taskState == 0 ">
+                    <button pButton pRipple type="button" icon="pi pi-list" class="p-button-rounded p-button-text p-button-plain" (click)="createTask(item)"></button>
+                </span>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+</div>

@@ -1,0 +1,78 @@
+<div class="title">Детали притензии</div>
+<mat-grid-list cols="2" rowHeight="24px" style="min-Width:400px; max-width: 600px;" >
+  <mat-grid-tile class="bg"> Претензия № </mat-grid-tile>
+  <mat-grid-tile> {{claimsNumber}} от {{addDate}} </mat-grid-tile>
+  <mat-grid-tile class="bg"> Клиент </mat-grid-tile>
+  <mat-grid-tile > {{client}} </mat-grid-tile>
+  <mat-grid-tile class="bg"> Дата и время получения претензии на склад </mat-grid-tile>
+  <mat-grid-tile> {{dateOfArrival}} </mat-grid-tile>
+</mat-grid-list>
+<div style="padding: 5px;">
+    <p-table   [resizableColumns]="true" styleClass="p-datatable-sm" [value]="claimsDetailDataSource" 
+    [totalRecords]="totalRecords" [loading]="loading"
+    [paginator]="true" [rows]="10" [showCurrentPageReport]="true" 
+    currentPageReportTemplate="Показанно с {first} по {last} из {totalRecords} записей" [rowsPerPageOptions]="[5,10,25,50,100]"
+    dataKey="id">
+        <ng-template pTemplate="caption">
+            <div class="p-d-flex">
+                <button type="button" pButton pRipple icon="pi pi-print" (click)="print()" class="p-mr-2 buttons-print" pTooltip="Печать" tooltipPosition="bottom"></button>
+                &nbsp;
+                <button type="button" pButton pRipple icon="pi pi-book" (click)="createTask()" class="p-button-success p-mr-2 buttons-print"  pTooltip="Создать задачи для пересчета" tooltipPosition="bottom"></button>
+                &nbsp;
+                <button type="button" pButton pRipple icon="pi pi-info-circle" (click)="getData()" class="p-button-warning p-mr-2 buttons-print" pTooltip="Данные" tooltipPosition="bottom"></button>
+                &nbsp;
+                <button type="button" pButton pRipple icon="pi pi-reply" (click)="sendToHost()" class="p-button-danger p-mr-2 buttons-print" pTooltip="Отправить в главную систему" tooltipPosition="bottom"></button>
+                
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th  class="th_header_small" width="1%">№</th>
+                <th  class="th_header_small" width="5%">Накла&shy;дная</th>
+                <th  class="th_header_small" width="5%">Код<br>товара</th>
+                <th  class="th_header_small" width="10%">Наиме&shy;нование<br>товара</th>
+                <th  class="th_header_small" width="4%">Отгр. кол-во<br>по накл.</th>
+                <th  class="th_header_small" width="4%">Кол-во<br> по претензии</th>
+                <th  class="th_header_small" width="4%">Сумма,&shy;руб.</th>
+                <th  class="th_header_small" width="6%">Результат<br> инвент-ции</th>
+                <th  class="th_header_small" width="5%">Вид претензии</th>
+                <th  class="th_header_small" width="15%">Описание<br> претензии</th>
+                <th  class="th_header_small" width="4%">Чья<br>вина</th>
+                <th  class="th_header_small" width="4%">Причи&shy;на</th>
+
+                <th  class="th_header_small" width="5%">Ответ <br>склада</th>
+                <th  class="th_header_small" width="7%">Виновный<br> компл-щик</th>
+                <th  class="th_header_small" width="7%">Виновный<br> кладовщик отгрузки</th>
+                <th  class="th_header_small" width="7%">Виновный <br>контроллер</th>
+                <th  class="th_header_small" width="7%">Ревизор</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item  let-i="rowIndex">
+            <tr>
+                <td class="td_detail">{{i + 1}}</td>
+                <td class="td_detail">{{item.externOrderKey}}</td>
+                <td class="td_detail">{{item.sku}}</td>
+                <td class="td_detail">{{item.descr}} </td>
+                <td class="td_detail">{{item.qtyPicked}}</td>
+                <td class="td_detail">{{item.qtyFact}}</td>
+                <td class="td_detail">{{item.sumPrice}}</td>
+                <td class="td_detail">
+                <a [routerLink]="[NAVIGATION.CLAIMS_DETAIL_BY_SKU.url]" 
+                    [queryParams]="{claimsNumber: this.claimsNumber, sku: item.sku }">
+                        Данные
+                    </a>  
+                </td>
+                <td class="td_detail">{{item.viewClaims}}</td>
+                <td class="td_detail">{{item.commentIn}}</td>
+                <td class="td_detail">{{item.whoseFault}}</td>
+                <td class="td_detail">{{item.reason}}</td>
+                <td class="td_detail">{{item.response}}</td>
+                <td class="td_detail">{{item.guiltyPick}}</td>
+                <td class="td_detail">{{item.guiltyStoreKeeper}}</td>
+                <td class="td_detail">{{item.guiltyController}}</td>
+                <td class="td_detail">{{item.auditor}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    </div>
+    

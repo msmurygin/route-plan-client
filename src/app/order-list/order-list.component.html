@@ -1,1 +1,157 @@
-<p>order-list works!</p>
+<mat-toolbar color="secondary">
+    <span class="cube_in_lane_text_style">{{nsqlDescription}}</span>
+    <p-badge [value]="nsqlValue" severity="success"></p-badge>
+    <div class="spacer"></div>
+    <mat-checkbox class="showdates_checkbox" [(ngModel)]="showDates" color="primary" >Показывать даты</mat-checkbox>
+</mat-toolbar>
+<p-contextMenu #cm [model]="menuItems"></p-contextMenu>
+
+<p-table  class="p-datatable-sm" 
+          [value]="orderDataSource" 
+          [paginator]="true" 
+          [rows]="10" 
+          [showCurrentPageReport]="true" 
+          [loading]="loading" 
+          currentPageReportTemplate="Показанно с {first} по {last} из {totalRecords} записей" [rowsPerPageOptions]="[5,10,25,50,100]"
+          [(contextMenuSelection)]="selectedOrderLine" [contextMenu]="cm"
+          sortField="route" sortMode="single" (onSort)="onSort()"
+          dataKey="route"   
+          [expandedRowKeys]="expandedRowKeys"
+          editMode="row"
+          >
+  <ng-template pTemplate="header">
+      <tr>
+        <th class="th_header">Клиент</th>
+        <th class="th_header">Заказ</th>
+        <th class="th_header">1C Торг</th>
+        <th class="th_header">Заказов</th>
+        <th class="th_header">Док-к<br>ВСЕГО</th>
+        <th class="th_header">Док-к осталось собрать</th>
+        <th class="th_header">Док-к<br>оста&shy;лось конт&shy;роль</th>
+        <th class="th_header">Собрано<br>%</th>
+        <th class="th_header">Конт&shy;роль<br>%</th>
+        <th class="th_header">Упаковано<br>%</th>
+        <th class="th_header">Загру&shy;жено<br>%</th>
+        <th class="th_header">Проблемы</th>
+        <th class="th_header">Расчетное</th>
+        <th class="th_header">Линии</th>
+        <th class="th_header">ДОК</th>
+        <th class="th_header">Объем,<br>куб.м.</th>
+        <th class="th_header">Вес,<br>тонн</th>
+        <th class="th_header">Кол&shy;во отгру&shy;же&shy;нных<br>мест</th>
+        <th class="th_header">Статус</th>
+        <th class="th_header">Кла&shy;до&shy;вщик<br>экс&shy;пе&shy;ди&shy;ции</th> 
+        <th class="th_header" *ngIf="showDates">Создание рейса</th>
+        <th class="th_header" *ngIf="showDates">Го&shy;тов&shy;ность рейса</th>
+        <th class="th_header" *ngIf="showDates">При&shy;бытие ТС</th>
+        <th class="th_header" *ngIf="showDates">Начало<br>погрузки</th>
+        <th class="th_header" *ngIf="showDates">Окончание<br>загрузки</th>
+        <th class="th_header" *ngIf="showDates">Про&shy;должи&shy;тель&shy;ность</th>
+        <th class="th_header" *ngIf="showDates">Отг&shy;ру&shy;зка</th>
+        <th class="th_header" *ngIf="showDates">Убытие<Br>ТС</th>
+      
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-orders let-rowIndex="rowIndex" let-expanded="expanded"  let-columns="columns">
+    <tr *ngIf="rowGroupMetadata[orders.route].index === rowIndex">
+        <td colspan="3" class="th_header_2_left"    >
+            <button type="button" pButton pRipple [pRowToggler]="orders" class="p-button-text p-button-rounded p-button-plain p-mr-2" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+            <span class="p-text-bold p-ml-2">{{orders.route}}</span>
+        </td>
+        
+        <th class="th_header_2" >{{orders.ordersCount}}</th>
+        <th class="th_header_2" >{{orders.totalOrderLines}}</th>
+        <th class="th_header_2" >{{orders.totalLeftToPickQty}}</th>
+        <th class="th_header_2" >{{orders.totalLeftToControlQty}}</th>
+        <th class="th_header_2" >{{round(orders.totalPicked)}}</th>
+        <th class="th_header_2" >{{round(orders.totalControlled)}}</th>
+        <th class="th_header_2" >{{round(orders.totalPacked)}}</th>
+        <th class="th_header_2" >{{round(orders.totalLoaded)}}</th>
+        <th class="th_header_2" ></th>
+        <th class="th_header_2" >{{round(orders.totalCalcQtyLane) }}</th>
+        <th class="th_header_2" ></th>
+        <th class="th_header_2" ></th>
+        <th class="th_header_2" >{{round(orders.totalStdCube)}}</th>
+        <th class="th_header_2" >{{round(orders.totalStdGrossWgt)}}</th>
+        <th class="th_header_2" >{{orders.totalSelectedCartonIdQty}}</th>
+        <th class="th_header_2" *ngIf="showDates"></th>
+        <th class="th_header_2" *ngIf="showDates"></th>
+        <th class="th_header_2" *ngIf="showDates" ></th>
+        <th class="th_header_2" *ngIf="showDates"></th>
+        <th class="th_header_2" *ngIf="showDates" ></th>
+        <th class="th_header_2" *ngIf="showDates"></th>
+        <th class="th_header_2" *ngIf="showDates"></th>
+        <th class="th_header_2" *ngIf="showDates" ></th>
+        <th class="th_header_2" *ngIf="showDates" ></th>
+        <th class="th_header_2" *ngIf="showDates" ></th>
+        <th class="th_header_2" *ngIf="!showDates" ></th>
+        <th class="th_header_2" *ngIf="!showDates" ></th>
+
+    </tr>
+</ng-template>
+    <ng-template pTemplate="rowexpansion" let-orderLine>
+        <tr *ngFor="let detail of getDetail(orderLine)">
+            <td class="td_detail">
+            
+            </td>
+            <td class="td_detail">{{detail.orderKey}}</td>
+            <td class="td_detail">
+                <a  [routerLink]="[NAVIGATION.ORDER_DETAIL.url]" 
+                    [queryParams]="{ orderKey: detail.orderKey, externalOrderKey2: detail.externalOrderKey2}"> 
+                    {{detail.externalOrderKey2}}
+                </a>
+            </td>
+            <td class="td_detail"></td>
+            
+            <td class="td_detail">{{detail.orderLines}}</td>
+            <td class="td_detail">{{detail.leftToPick}}</td>
+            <td class="td_detail">{{detail.leftToControl}}</td>
+            <td class="td_detail">{{detail.pickedQty}}</td>
+            <td class="td_detail">{{detail.controlledQty}}</td>
+            <td class="td_detail">{{ round(detail.packedQty) }}</td>
+            <td class="td_detail">{{detail.loadedQty}}</td>
+            <td [class]="getRowColor(detail)">
+                <a *ngIf="detail.showReason === 1"class="exclamation-marks" >!!!</a>
+                <div *ngIf="detail.showReason != 1">Нет</div>
+            </td>
+            <td class="td_detail">{{round(detail.calcQtyLane) }}</td>
+           <!--<td class="td_detail">{{detail.packingLocation}}</td>--> 
+            <td class="td_detail" pEditableColumn>
+                <p-cellEditor>
+                    <ng-template pTemplate="input">
+                        <p-dropdown [options]="packingLocations" [(ngModel)]="detail.packingLocation" [style]="{'width':'100%'}"></p-dropdown>
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                        {{detail.packingLocation}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+           <!-- <td class="td_detail">{{detail.door}}</td>-->
+             <td class="td_detail" pEditableColumn>
+                <p-cellEditor>
+                    <ng-template pTemplate="input">
+                        <p-dropdown [options]="packingLocations" [(ngModel)]="detail.door" [style]="{'width':'100%'}"></p-dropdown>
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                        {{detail.door}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            <td class="td_detail">{{detail.stdCube}}</td>
+            <td class="td_detail">{{detail.stdGrossWgt}}</td>
+            <td class="td_detail">{{detail.selectedCartonIdQty}}</td>
+            <td class="td_detail">{{detail.status}}</td>
+            <td class="td_detail">{{detail.susr2}}</td>
+            <td class="td_detail" *ngIf="showDates">{{transformDate(detail.addDate) }}</td>
+            <td class="td_detail" *ngIf="showDates">{{transformDate(detail.routeReady) }}</td>
+            <td class="td_detail" *ngIf="showDates">{{transformDate(detail.actualArrivalDate) }}</td>
+            <td class="td_detail" *ngIf="showDates">{{transformDate(detail.loadStart) }}</td>
+            <td class="td_detail" *ngIf="showDates">{{transformDate(detail.loadEnd) }}</td>
+            <td class="td_detail" *ngIf="showDates">{{transformDate(detail.loadDuration) }}</td>
+            <td class="td_detail" *ngIf="showDates">{{transformDate(detail.shipDate) }}</td>
+            <td class="td_detail" *ngIf="showDates">{{transformDate(detail.vehicleLeftDate)}}</td>
+     
+
+        </tr>
+    </ng-template>
+</p-table>

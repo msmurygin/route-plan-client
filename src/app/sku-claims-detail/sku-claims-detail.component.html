@@ -1,0 +1,47 @@
+<div class="title">Результат инвентаризации по товару</div>
+<div style="padding: 5px;">
+    <p-table   [resizableColumns]="true" styleClass="p-datatable-sm" [value]="skuClaimsDetailDS" 
+    [totalRecords]="totalRecords" [loading]="loading"
+    [paginator]="true" [rows]="10" [showCurrentPageReport]="true" 
+    currentPageReportTemplate="Показанно с {first} по {last} из {totalRecords} записей" [rowsPerPageOptions]="[5,10,25,50,100]"
+    dataKey="id">
+        <ng-template pTemplate="caption">
+            <div class="p-d-flex">
+                <button type="button" pButton pRipple icon="pi pi-print" (click)="print()" class="p-mr-2 buttons-print" pTooltip="Печать" tooltipPosition="bottom"></button>
+                &nbsp;
+                <button type="button" pButton pRipple icon="pi pi-book" (click)="createTask()" class="p-button-success p-mr-2 buttons-print"  pTooltip="Создать задачи для пересчета" tooltipPosition="bottom"></button>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th  class="th_header_small" width="1%">№</th>
+                <th  class="th_header_small" width="5%">Код<br>товара</th>
+                <th  class="th_header_small" width="10%">Наиме&shy;нование<br>товара</th>
+                <th  class="th_header_small" width="4%">Ячейка</th>
+                <th  class="th_header_small" width="4%">По учету</th>
+                <th  class="th_header_small" width="4%">Факт в ячейке</th>
+                <th  class="th_header_small" width="6%">Расхождение</th>
+                <th  class="th_header_small" width="5%">Статус задачи</th>
+                <th  class="th_header_small" width="15%">Дата подсчета</th>
+                <th  class="th_header_small" width="4%">Причина</th>
+                <th  class="th_header_small" width="4%">Ревизор</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item>
+            <tr>
+                <td class="td_detail">{{item.id}}</td>
+                <td class="td_detail">{{item.sku}}</td>
+                <td class="td_detail">{{item.descr}} </td>
+                <td class="td_detail">{{item.loc}}</td>
+                <td class="td_detail">{{item.qty}}</td>
+                <td class="td_detail">{{item.dtQty}}</td>
+                <td class="td_detail">{{item.result}}</td>
+                <td class="td_detail">{{item.tdStatus}}</td>
+                <td class="td_detail">{{item.tdDate}}</td>
+                <td class="td_detail">{{item.reason}}</td>
+                <td class="td_detail">{{item.auditor}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    </div>
+    

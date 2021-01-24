@@ -21,7 +21,6 @@ export class ProblemListComponent implements OnInit {
   
   constructor(private route   : ActivatedRoute,
     private service : RestService,
-    private router : Router,
     private colorUtil: TableRowColorUtils) {
     this.home = {icon: 'pi pi-home', routerLink: '/'};
   }
@@ -45,7 +44,7 @@ export class ProblemListComponent implements OnInit {
 
   doPost(req :ProblemListRequestBody){
     console.log(req)
-    this.service.postTableData<ProblemListRequestBody>(ControllerURL.PROBLEM_LIST_URL, req).subscribe(response =>{
+    this.service.post<ProblemListRequestBody>(ControllerURL.PROBLEM_LIST_URL, req).subscribe(response =>{
      
       console.log(response['problems'])
       this.problemListDataSource = response['problems']

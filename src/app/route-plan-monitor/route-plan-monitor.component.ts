@@ -2,16 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ControllerURL } from 'src/environments/controllers';
 import { RestService } from '../rest-service.service';
-import Codelkup from '../dto/codelkup';
+import   Codelkup from '../dto/codelkup';
 import { DateFormatPipe } from '../date-format.pipe';
 import { MenuItem, MessageService } from 'primeng/api';
 import { PlanRouteDetailTable } from '../dto/plan-route-detail-table';
 import { PlanRouteHeaderTable } from '../dto/plan-route-header-table';
 import { RequestBody } from '../dto/plan-route-request-body';
-import { ReplenishmentTaskRequestBody } from '../dto/replenishment-task-request-body';
 import { Router } from '@angular/router';
 import { TableRowColorUtils } from '../table-row-color-utils';
-
+import {NavigationURL} from '../../environments/navigation';
+import { TableMenuContextService } from './table-menu-context.service';
+import { CookieService } from 'ngx-cookie-service';
+import { HttpHeaders } from '@angular/common/http';
 
 
 @Component({
@@ -53,49 +55,38 @@ export class RoutePlanMonitorComponent implements OnInit  {
   
   loading              : boolean  = false;
   filterPanelOpenState : boolean  = true;
-  showDates            : boolean  =  false;
+  showDates            : boolean  = false;
   
-  menuItems      : MenuItem[];
-  selectedDetail : PlanRouteDetailTable;
+  menuItems            : MenuItem[];
+  selectedDetail       : PlanRouteDetailTable;
+
+  NAVIGATION           = NavigationURL;
 
   constructor(private service : RestService, 
               private _dateFormatPipe: DateFormatPipe,
               private messageService: MessageService,
               private router : Router,
-              private colorUtil : TableRowColorUtils) { 
+              private colorUtil : TableRowColorUtils,
+              private menuAction: TableMenuContextService) { 
     this.loadStatusFilterData();
     this.loadOrderTypeFilterData();
     this.loadDestinationFilterData();
-
-
-    
   }
 
   ngOnInit(){
-    
+
+  
     this.menuItems = [
-      {label: 'Выпустить', icon: 'pi pi-fw pi-caret-right', command: () => this.viewProduct(this.selectedDetail)},
-      {label: 'Зарезервировать', icon: 'pi pi-fw pi-briefcase', command: () => this.deleteProduct(this.selectedDetail)},
-      {label: 'Отгрузка', icon: 'pi pi-fw pi-sign-out', command: () => this.deleteProduct(this.selectedDetail)},
-      {label: 'Отмена резервировани', icon: 'pi pi-fw pi-times', command: () => this.deleteProduct(this.selectedDetail)},
-      {label: 'Комплектовочная ведомость', icon: 'pi pi-fw pi-file-pdf', command: () => this.deleteProduct(this.selectedDetail)},
-      {label: 'Акт приема/передачи клиенту', icon: 'pi pi-fw pi-file-o', command: () => this.deleteProduct(this.selectedDetail)},
-      {label: 'Сборка по бумаге', icon: 'pi pi-fw pi-file-excel', command: () => this.deleteProduct(this.selectedDetail)},
-      {label: 'Места без отметки', icon: 'pi pi-fw pi-map', command: () => this.deleteProduct(this.selectedDetail)},
-      {label: 'Закрыть рейс', icon: 'pi pi-fw pi-check-square', command: () => this.deleteProduct(this.selectedDetail)},
-    ];
-    
-  }
-
-  viewProduct(row: PlanRouteDetailTable) {
-    console.log(row);
-    this.messageService.add({severity: 'info', summary: 'Product Selected', detail: row.driverName });
-}
-
-  deleteProduct(row: PlanRouteDetailTable) {
-      this.detailDataSource = this.detailDataSource.filter((p) => p.rowId !== row.rowId);
-      this.messageService.add({severity: 'info', summary: 'Product Deleted', detail: row.driverName});
-      this.selectedDetail = null;
+      {label: 'Выпустить', icon: 'pi pi-fw pi-caret-right', command: () => this.menuAction.release(this.selectedDetail)},
+      {label: 'Зарезервировать', icon: 'pi pi-fw pi-briefcase', command: () => this.menuAction.allocate(this.selectedDetail)},
+      {label: 'Отгрузка', icon: 'pi pi-fw pi-sign-out', command: () => this.menuAction.ship(this.selectedDetail)},
+      {label: 'Отмена резервировани', icon: 'pi pi-fw pi-times', command: () => this.menuAction.cancelAllocation(this.selectedDetail)},
+      {label: 'Комплектовочная ведомость', icon: 'pi pi-fw pi-file-pdf', command: () => this.menuAction.pickList(this.selectedDetail)},
+      {label: 'Акт приема/передачи клиенту', icon: 'pi pi-fw pi-file-o', command: () => this.menuAction.acceptenceAct(this.selectedDetail)},
+      {label: 'Сборка по бумаге', icon: 'pi pi-fw pi-file-excel', command: () => this.menuAction.pickByPaper(this.selectedDetail)},
+      {label: 'Места без отметки', icon: 'pi pi-fw pi-map', command: () => this.menuAction.placesWithNoMarks(this.selectedDetail)},
+      {label: 'Закрыть рейс', icon: 'pi pi-fw pi-check-square', command: () => this.menuAction.closeRoute(this.selectedDetail)},
+    ]; 
   }
 
   
@@ -103,20 +94,17 @@ export class RoutePlanMonitorComponent implements OnInit  {
   searchClicked() {
     this.loading = true;
     let requestBody : RequestBody = this.createHttpRequestBody();
-    this.service.postTableData<PlanRouteHeaderTable>(ControllerURL.ROUTE_PLAN_TABLE_DATA_URL, requestBody).subscribe(response =>{
+    this.service.post<PlanRouteHeaderTable>(ControllerURL.ROUTE_PLAN_TABLE_DATA_URL, requestBody).subscribe(response =>{
       this.loading = false;
       this.processHttpResponse(response);
     });
   }
-
-
+  
+  
   gotoReplenishmentTask(item :PlanRouteDetailTable): void {
-    this.router.navigate(['/replenishment'], { queryParams: { externalloadid: item.externalloadid, loadusr2: item.loadUsr2 }})
+    this.router.navigate([this.NAVIGATION.REPLENISHMENT.url], { queryParams: { externalloadid: item.externalloadid, loadusr2: item.loadUsr2 }})
   }
-  gotoProblemList(item :PlanRouteDetailTable): void {
-    this.router.navigate(['/problems'], { queryParams: { externalloadid: item.externalloadid, loadusr2: item.loadUsr2 }})
-  }
-
+  
 
   processHttpResponse(resp: PlanRouteHeaderTable){
     const HEADER_DATA: PlanRouteHeaderTable[] = [{ 
@@ -179,7 +167,7 @@ export class RoutePlanMonitorComponent implements OnInit  {
     return value ? value.join(",") : '';
   }
   getRowColor (item : PlanRouteDetailTable) {
-    return this.colorUtil.getRowColor(item);
+    return this.colorUtil.getStyleByReasonCode(item);
   }
 
   getStyleByShift(item : PlanRouteDetailTable ){

@@ -1,0 +1,70 @@
+:host ::ng-deep .p-multiselect {
+    min-width: 20rem;
+}
+
+
+.fio {
+    min-width: 20rem;
+}
+
+.example-form-field {
+    min-width: 30rem;
+}
+.show-claims-by {
+    width: auto;
+    display: inline-block;
+    border-radius: 10px;
+    border: 2px solid #3f51b50e;
+    padding-left: 5px;
+    padding-right: 10px;
+    padding-bottom: 16px;
+    padding-top: 16px;
+    margin-top: 5px;
+    margin-right: 20px;
+    margin-bottom: 5px;
+}
+.show-claims-by > h3 {
+    color: #3f51b5;
+}
+
+.show-all-claims{
+    width: 100%;
+    padding-right: 10px;
+}
+
+.skus-in-claims {
+    width: auto;
+    display: inline-block;
+    border-radius: 10px;
+    border: 2px solid #3f51b50e;
+    padding-left: 5px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    margin-top: 10px;
+    margin-right: 20px;
+    margin-bottom: 5px;
+}
+.skus-in-claims > h3 {
+    color: #3f51b5;
+}
+
+
+.th_header_small {
+    padding: 0!important;
+    font-size: 0.7em!important;
+    text-align: left!important;
+    background-color: rgba(211, 211, 211, 0.712)!important;
+    border-bottom: 1px solid #3f51b5!important;
+}
+
+.td_detail {
+    padding: 2px 2px 2px 2px !important;
+    word-wrap: break-word;
+    font-size : 0.8em!important;
+    text-align: left!important;
+    color: #000000!important;
+    background-color:rgba(211, 211, 211, 0.109)
+}
+
+    

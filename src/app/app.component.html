@@ -1,31 +1,47 @@
-
+<p-toast></p-toast>
 <p>
-    <mat-toolbar color="primary">
-      <button mat-icon-button class="example-icon" aria-label="Меню" [matMenuTriggerFor]="menu">
+    <mat-toolbar class="buttons-print">
+      <button mat-icon-button aria-label="Меню" [matMenuTriggerFor]="menu">
         <mat-icon>menu</mat-icon>
       </button>
-      <span>План рейсов</span>
-      <span class="example-spacer"></span>
-      <button mat-icon-button class="example-icon" aria-label="Вход">
+      <button mat-icon-button  aria-label="Домой" routerLink="/">
+        <mat-icon>home</mat-icon>
+      </button>
+      
+      <button mat-icon-button aria-label="Назад" (click)="goBack()">
+        <mat-icon>keyboard_arrow_left</mat-icon>
+      </button>
+      <button mat-icon-button  aria-label="Вперед" (click)="goForward()">
+        <mat-icon>keyboard_arrow_right</mat-icon>
+      </button>
+
+      <span class="spacer"></span>
+     
+      <button mat-icon-button  aria-label="Вход">
         <mat-icon>exit_to_app</mat-icon>
       </button>
     </mat-toolbar>
   </p>
   <mat-menu #menu="matMenu">
-    <button mat-menu-item>
+    <button mat-menu-item (click)="gotoClaims()">
       <mat-icon>sticky_note_2</mat-icon>
       <span>Работа с претензиями</span>
     </button>
-    <button mat-menu-item disabled>
+    <button mat-menu-item (click)="gotoRoutePlan()">
       <mat-icon>tab_unselected</mat-icon>
       <span>План рейсов</span>
     </button>
-    <button mat-menu-item>
+    <button mat-menu-item  routerLink="/replenishmentpriority">
+      <mat-icon>tune</mat-icon>
+      <span>Управ-е приор-ом поп-я</span>
+    </button>
+    <button mat-menu-item (click)="displaySettingsDialog()">
       <mat-icon>settings</mat-icon>
       <span>Настройки</span>
     </button>
   </mat-menu>
- 
+  <settings [showDialog]="isDisplayDialogShown" (dialogClosedEvent)="dialogClosedEvent($event)"></settings>
+  <p-blockUI [blocked]="uiBlocked"></p-blockUI>
 <div class="container">
     <router-outlet></router-outlet>
 </div>

@@ -1,0 +1,58 @@
+:host ::ng-deep  .p-datatable-resizable .p-datatable-tbody>tr>td, .p-datatable-resizable .p-datatable-tfoot>tr>td, .p-datatable-resizable .p-datatable-thead>tr>th {
+    overflow: hidden;
+    white-space: normal;
+}
+
+@media print {
+    .buttons-print {
+        visibility: hidden;
+    }
+   
+}
+
+
+:host ::ng-deep .mat-figure {
+    align-items: flex-start !important;
+    justify-content: start !important;
+    border: 1px solid rgba(148, 148, 148, 0.397);
+    border-style: solid!important;
+    padding: 5px!important;
+}
+
+:host ::ng-deep .mat-grid-list{
+    margin: 5px!important;
+    margin-left: 20px!important;
+    border: 1px solid rgba(148, 148, 148, 0.397);
+    border-style: solid!important;
+}
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    font-weight: 500;
+}
+
+.bg{
+    background-color:  rgba(148, 148, 148, 0.192);
+}
+
+
+.th_header_small {
+    padding: 0!important;
+    font-size: 0.7em!important;
+    text-align: left!important;
+    background-color: rgba(211, 211, 211, 0.712)!important;
+    border-bottom: 1px solid #3f51b5!important;
+}
+
+.td_detail {
+    padding: 2px 2px 2px 2px !important;
+    word-wrap: break-word;
+    font-size : 0.8em!important;
+    text-align: left!important;
+    color: #000000!important;
+    background-color:rgba(211, 211, 211, 0.109);
+    overflow: hidden;
+    white-space: normal;
+}

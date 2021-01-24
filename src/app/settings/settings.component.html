@@ -1,0 +1,107 @@
+
+  <p-dialog [(visible)]="showDialog" (onHide)="onHide()" [style]="{width: '35vw'}"  class="dialog" [modal]="true">
+    <p-header class="dialog-header">
+      Настройки
+   </p-header>
+   <span style="display:inline-flex; height: 100%;" class="dialog-header-title">
+    <p-panel header="Отображения данных врежиме смена" [style]="{height: '100%'}" class="dialog-header-title">
+        <p-panel header="Незавершенные задачи" class="dialog-header-title">
+         <div style="display: grid; ">
+              <span style="display: inline-flex; ">
+                <p-checkbox [(ngModel)]="hideNotFinishedTask" binary="true" inputId="binary"></p-checkbox>    
+                <div class="p-text-left padding-right">не отображать</div> 
+              </span>
+             
+              <span style="display: inline-flex;">
+                <p-checkbox  [(disabled)]="hideNotFinishedTask" [(ngModel)]="showLastShiftNotFinishedTask" binary="true" inputId="binary"></p-checkbox>    
+                <div class="p-text-left padding-right">за предыдущую смену</div> 
+               </span>
+             
+               <span style="display: inline-flex;">
+                <p-checkbox [(disabled)]="hideNotFinishedTask" [(ngModel)]="showNotFinishedTaskInPeriod" binary="true" inputId="binary"></p-checkbox>    
+                <div class="p-text-left padding-right">за заданный период</div> 
+               </span>
+               <span style="display: inline-flex;">
+                <p-checkbox [(disabled)]="hideNotFinishedTask"  [(ngModel)]="showAllNotFinishedTask" binary="true" inputId="binary"></p-checkbox>    
+                <div class="p-text-left padding-right">все</div> 
+              </span>
+          </div>
+        </p-panel>
+       <div style="height: 80px;"></div>
+        <p-panel header="Планируемые задачи">
+          <div style="display: grid; ">
+            <span style="display: inline-flex; ">
+              <p-checkbox [(ngModel)]="hidePlanedTasks" binary="true" inputId="binary"></p-checkbox>    
+              <div class="p-text-left padding-right">не отображать</div> 
+            </span>
+           
+            <span style="display: inline-flex;">
+              <p-checkbox [(ngModel)]="showNextShiftPlanedTasks" binary="true" inputId="binary"></p-checkbox>    
+              <div class="p-text-left padding-right">за предыдущую смену</div> 
+             </span>
+           
+             <span style="display: inline-flex;">
+              <p-checkbox [(ngModel)]="showPlanedTaskInPeriod" binary="true" inputId="binary"></p-checkbox>    
+              <div class="p-text-left padding-right">за заданный период в днях</div> 
+             </span>
+        </div>
+      </p-panel>
+      <div style="height: 70px;"></div>
+    </p-panel>  
+
+    <p-panel header="Начала/окончания смен в часах">
+      <p-panel header="Дневная">
+        <br>
+        <span class="p-float-label">
+          <p-inputNumber 
+              id="float-dayShiftBegin" 
+              [(ngModel)]="dayShiftBegin" 
+              [min]="0" [max]="23" (ngModelChange)="markDirty('dayShiftBegin')">
+          </p-inputNumber>
+          <label for="float-dayShiftBegin">Начало</label>
+        </span>
+        <br>
+        <br>
+        <span class="p-float-label">
+          <p-inputNumber  
+              id="float-dayShiftEnd" 
+              [(ngModel)]="dayShiftEnd" 
+              [min]="0" [max]="23"(ngModelChange)="markDirty('dayShiftEnd')">
+          </p-inputNumber>
+          <label for="float-dayShiftEnd">Конец</label>
+        </span>
+      </p-panel>
+       <br>
+      <p-panel header="Ночная">
+        <br>
+        <span class="p-float-label">
+          <p-inputNumber  
+              disabled="true" 
+              id="float-nightShiftBegin" 
+              [(ngModel)]="nightShiftBegin" 
+              [min]="0" [max]="23" (ngModelChange)="markDirty('nightShiftBegin')">
+          </p-inputNumber>
+          <label for="float-nightShiftBegin">Начало</label>
+        </span>
+       <br>
+       <br>
+        <span class="p-float-label">
+          <p-inputNumber  
+              disabled="true" 
+              id="float-nightShiftEnd" 
+              [(ngModel)]="nightShiftEnd" 
+              [min]="0" [max]="23" (ngModelChange)="markDirty('nightShiftBegin')">
+          </p-inputNumber>
+          <label for="float-nightShiftEnd">Конец</label>
+        </span>
+      </p-panel>
+    </p-panel>  
+   </span>
+   
+    <p-footer>
+      <span style="display:inline-flex;">
+        <button pButton type="button" label="Сохранить" icon="pi pi-save" iconPos="left" (click)="saveSettings()"></button>
+        <button pButton type="button" label="Отмена"  class="p-button-danger" icon="pi pi-cancel" iconPos="left" (click)="cancel()"></button>
+      </span>
+    </p-footer>
+</p-dialog>

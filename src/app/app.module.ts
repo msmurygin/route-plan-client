@@ -1,4 +1,4 @@
-import { HttpClientModule} from '@angular/common/http'
+import { HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http'
 import { ActiveUsersComponent } from './active-users/active-users.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -35,7 +35,33 @@ import {BreadcrumbModule} from 'primeng/breadcrumb';
 import { ProblemListComponent } from './problem-list/problem-list.component';
 import { TableRowColorUtils } from './table-row-color-utils';
 import { OrderListComponent } from './order-list/order-list.component';
+import {BadgeModule} from 'primeng/badge';
+import { OrderDetailComponent } from './order-detail/order-detail.component';
+import {InputTextModule} from 'primeng/inputtext';
+import {DropdownModule} from 'primeng/dropdown';
+import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
+import { SkuBalanceComponent } from './sku-balance/sku-balance.component';
+import { MessageService } from 'primeng/api';
+import {DialogModule} from 'primeng/dialog'
+import {PanelModule} from 'primeng/panel';
+import {FieldsetModule} from 'primeng/fieldset';
+import {CheckboxModule} from 'primeng/checkbox';
 
+import {InputNumberModule} from 'primeng/inputnumber';
+import { SettingsComponent } from './settings/settings.component';
+import {BlockUIModule} from 'primeng/blockui';
+import { TableMenuContextService } from './route-plan-monitor/table-menu-context.service';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {ConfirmationService} from 'primeng/api';
+import { UserService } from './user.service';
+import { LoginComponent } from './login/login.component';
+import {CookieService} from 'ngx-cookie-service';
+import { ClaimsComponent } from './claims/claims.component';
+import {MultiSelectModule} from 'primeng/multiselect';
+import { ClaimsDetailsComponent } from './claims-details/claims-details.component'
+import {MatGridListModule} from '@angular/material/grid-list';
+import { SkuClaimsDetailComponent } from './sku-claims-detail/sku-claims-detail.component';
+import { ReplenishmentPriorityComponent } from './replenishment-priority/replenishment-priority.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +70,16 @@ import { OrderListComponent } from './order-list/order-list.component';
     RoutePlanMonitorComponent,
     ReplenishmentTaskComponent,
     ProblemListComponent,
-    OrderListComponent
+    OrderListComponent,
+    OrderDetailComponent,
+    BreadcrumbComponent,
+    SkuBalanceComponent,
+    SettingsComponent,
+    LoginComponent,
+    ClaimsComponent,
+    ClaimsDetailsComponent,
+    SkuClaimsDetailComponent,
+    ReplenishmentPriorityComponent,
   ],
   imports: [
     BrowserModule,
@@ -65,7 +100,6 @@ import { OrderListComponent } from './order-list/order-list.component';
     MatTableModule,
     MatPaginatorModule,
     MatDividerModule,
-
     TableModule,
     ButtonModule,
     ContextMenuModule,
@@ -73,12 +107,29 @@ import { OrderListComponent } from './order-list/order-list.component';
     MatToolbarModule,
     MatMenuModule,
     BreadcrumbModule,
+    BadgeModule,
+    InputTextModule,
+    DropdownModule,
+    DialogModule,
+    PanelModule,
+    FieldsetModule,
+    CheckboxModule,
+    InputNumberModule,
+    BlockUIModule,
+    ConfirmDialogModule,
+    MultiSelectModule,
+    MatGridListModule
   ],
   providers: [
     RestService,
     DateFormatPipe,
     TableRowColorUtils,
+    MessageService,
+    ConfirmationService,
+    TableMenuContextService,
+    CookieService,
     {provide: MAT_DATE_LOCALE, useValue: 'ru-RU'},
+    //UserService
   ],
   bootstrap: [AppComponent]
 })

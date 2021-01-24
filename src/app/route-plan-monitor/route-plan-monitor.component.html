@@ -1,3 +1,5 @@
+<p-toast></p-toast>
+<p-confirmDialog icon="pi pi-exclamation-triangle" ></p-confirmDialog>
 <mat-expansion-panel [expanded]="filterPanelOpenState"  (opened)="filterPanelOpenState" (closed)="!filterPanelOpenState">
     <mat-expansion-panel-header>
         <mat-panel-title>Фильтр поиска</mat-panel-title>
@@ -163,7 +165,12 @@
       <tr [pContextMenuRow]="item">
           <td [class]="getStyleByShift(item)" *ngIf="false">{{item.rowId}}</td>
           <td [class]="getStyleByShift(item)">{{item.deliveryDate | date:'dd.MM.yyyy'}}</td>
-          <td [class]="getStyleByShift(item)"><a href="#" class="p-text-center">{{item.loadUsr2}}</a>  </td>
+          <td [class]="getStyleByShift(item)">
+              <a [routerLink]="[NAVIGATION.ORDER_LIST.url]" 
+                 [queryParams]="{ externalloadid: item.externalloadid, loadusr2: item.loadUsr2}">
+                    {{item.loadUsr2}}
+              </a>  
+          </td>
           <td colspan="2" [class]="getStyleByShift(item)">{{item.route}}</td>
           <td [class]="getStyleByShift(item)">{{item.itemsInRoute}} </td>
           <td [class]="getStyleByShift(item)">{{item.leftToPick}} </td>
@@ -173,7 +180,9 @@
           <td [class]="getStyleByShift(item)">{{item.packed}} </td>
           <td [class]="getStyleByShift(item)">{{item.loaded}} </td>
           <td [class]="getRowColor(item)">
-            <a *ngIf="item.showReason === 1"class="p-text-center exclamation-marks" [routerLink]="['/problems']"  [queryParams]="{ externalloadid: item.externalloadid, loadusr2: item.loadUsr2}" >!!!</a>
+            <a *ngIf="item.showReason === 1" class="exclamation-marks" 
+                [routerLink]="[NAVIGATION.PROBLEMS.url]"  
+                [queryParams]="{ externalloadid: item.externalloadid, loadusr2: item.loadUsr2}" >!!!</a>
             <div *ngIf="item.showReason != 1"class="p-text-center">Нет</div>
           </td>
           <td [class]="getStyleByShift(item)"><div class="p-text-center"> </div>{{item.packingLocation}} </td>

@@ -13,7 +13,7 @@ export class TableRowColorUtils {
         return "";
     }
 
-    getRowColor (item : PlanRouteDetailTable) {
+    getStyleByReasonCode (item : PlanRouteDetailTable) {
         if (item.reasonCode == 5) return "reason_purple";
         if (item.reasonCode == 4) return "reason_red";
         if (item.reasonCode == 3) return "reason_gray";
