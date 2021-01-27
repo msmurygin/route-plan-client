@@ -10,7 +10,7 @@ import { MatSelectModule} from '@angular/material/select'
 import { MatDatepickerModule} from '@angular/material/datepicker'
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatNativeDateModule} from '@angular/material/core';
+import { DateAdapter, MatNativeDateModule} from '@angular/material/core';
 import { RestService } from './rest-service.service';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox'
@@ -46,7 +46,6 @@ import {DialogModule} from 'primeng/dialog'
 import {PanelModule} from 'primeng/panel';
 import {FieldsetModule} from 'primeng/fieldset';
 import {CheckboxModule} from 'primeng/checkbox';
-
 import {InputNumberModule} from 'primeng/inputnumber';
 import { SettingsComponent } from './settings/settings.component';
 import {BlockUIModule} from 'primeng/blockui';
@@ -62,7 +61,8 @@ import { ClaimsDetailsComponent } from './claims-details/claims-details.componen
 import {MatGridListModule} from '@angular/material/grid-list';
 import { SkuClaimsDetailComponent } from './sku-claims-detail/sku-claims-detail.component';
 import { ReplenishmentPriorityComponent } from './replenishment-priority/replenishment-priority.component';
-
+import { RusDateProvider } from './RusDateProvider';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 @NgModule({
   declarations: [
     AppComponent,
@@ -118,7 +118,8 @@ import { ReplenishmentPriorityComponent } from './replenishment-priority/repleni
     BlockUIModule,
     ConfirmDialogModule,
     MultiSelectModule,
-    MatGridListModule
+    MatGridListModule,
+    MatButtonToggleModule
   ],
   providers: [
     RestService,
@@ -128,7 +129,8 @@ import { ReplenishmentPriorityComponent } from './replenishment-priority/repleni
     ConfirmationService,
     TableMenuContextService,
     CookieService,
-    {provide: MAT_DATE_LOCALE, useValue: 'ru-RU'},
+    { provide: MAT_DATE_LOCALE, useValue: 'ru-RU'},
+    { provide: DateAdapter, useClass: RusDateProvider }
     //UserService
   ],
   bootstrap: [AppComponent]

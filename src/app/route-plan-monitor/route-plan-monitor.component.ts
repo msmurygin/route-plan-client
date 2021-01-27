@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ControllerURL } from 'src/environments/controllers';
 import { RestService } from '../rest-service.service';
@@ -14,7 +14,8 @@ import {NavigationURL} from '../../environments/navigation';
 import { TableMenuContextService } from './table-menu-context.service';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpHeaders } from '@angular/common/http';
-
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
 
 @Component({
   selector: 'route-plan-monitor',
@@ -62,6 +63,19 @@ export class RoutePlanMonitorComponent implements OnInit  {
 
   NAVIGATION           = NavigationURL;
 
+  //Auto update functionality
+  refreshIntervalId : any;
+  autoUpdate           : boolean = false;
+ 
+  // Drop down batch select/unselect vars
+  orderTypeAllSelected = false;
+  destinationAllSelected = false;
+  orderStatusAllSelected = false;
+  @ViewChild('orderTypeSelect') orderTypeSelect: MatSelect;
+  @ViewChild('orderStatusSelect') orderStatusSelect: MatSelect;
+  @ViewChild('destinationSelect') destinationSelect: MatSelect;
+
+  
   constructor(private service : RestService, 
               private _dateFormatPipe: DateFormatPipe,
               private messageService: MessageService,
@@ -174,4 +188,45 @@ export class RoutePlanMonitorComponent implements OnInit  {
     return this.colorUtil.getStyleByShift(item)
   }
 
+  toogleOrderTypeSelect() {
+    this.orderTypeAllSelected = !this.orderTypeAllSelected;  // to control select-unselect
+    if (this.orderTypeAllSelected) {
+      this.orderTypeSelect.options.forEach( (item : MatOption) => item.select());
+    } else {
+      this.orderTypeSelect.options.forEach( (item : MatOption) => {item.deselect()});
+    }
+    this.orderTypeSelect.close();
+  }
+
+
+  toogleStatusSelect() {
+    this.orderStatusAllSelected = !this.orderStatusAllSelected;  // to control select-unselect
+    if (this.orderStatusAllSelected) {
+      this.orderStatusSelect.options.forEach( (item : MatOption) => item.select());
+    } else {
+      this.orderStatusSelect.options.forEach( (item : MatOption) => {item.deselect()});
+    }
+    this.orderStatusSelect.close();
+  }
+
+  toogleDestinationSelect() {
+    this.destinationAllSelected = !this.destinationAllSelected;  // to control select-unselect
+    if (this.destinationAllSelected) {
+      this.destinationSelect.options.forEach( (item : MatOption) => item.select());
+    } else {
+      this.destinationSelect.options.forEach( (item : MatOption) => {item.deselect()});
+    }
+    this.destinationSelect.close();
+  }
+
+
+  toogleAutoUpdate(){
+    
+    this.autoUpdate = !this.autoUpdate;
+    if (this.autoUpdate){
+       this.refreshIntervalId =  setInterval(() => { this.searchClicked();}, 10000);
+    }else{
+      clearInterval(this.refreshIntervalId)
+    }
+  }
 }

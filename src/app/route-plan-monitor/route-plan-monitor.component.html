@@ -1,16 +1,18 @@
 <p-toast></p-toast>
 <p-confirmDialog icon="pi pi-exclamation-triangle" ></p-confirmDialog>
-<mat-expansion-panel [expanded]="filterPanelOpenState"  (opened)="filterPanelOpenState" (closed)="!filterPanelOpenState">
+<!--<mat-expansion-panel [expanded]="filterPanelOpenState"  (opened)="filterPanelOpenState" (closed)="!filterPanelOpenState">
     <mat-expansion-panel-header>
         <mat-panel-title>Фильтр поиска</mat-panel-title>
         <mat-panel-description>
-           <!-- описание-->
+       
         </mat-panel-description>
-    </mat-expansion-panel-header>
+    </mat-expansion-panel-header> -->
     <!--OrderType Filter -->
-    <mat-form-field>
+    <mat-form-field  appearance="fill">
         <mat-label>Тип обработки</mat-label>
-        <mat-select [formControl]="orderTypesFormControl" multiple>
+       
+        <mat-select #orderTypeSelect [formControl]="orderTypesFormControl" multiple>
+        <mat-option  (click)="toogleOrderTypeSelect()" [value]="0">Выбрать все</mat-option>
         <mat-select-trigger>
             {{orderTypesFormControl.value ? getOrderTypeDescription(orderTypesFormControl.value[0]) : ''}}
             <span *ngIf="orderTypesFormControl.value?.length > 1">
@@ -23,13 +25,16 @@
     &nbsp;
     <!-- end of orderType Filter -->
     <!-- фильтр по датам -->
-    <mat-form-field>
+   <!-- <p-calendar formControlName="startDate" showTime="true" hourFormat="24" dateFormat="dd.mm.yy"></p-calendar>-->
+
+    
+    <mat-form-field  appearance="fill">
         <mat-label>Дата с</mat-label>
         <input matInput [matDatepicker]="startDate1" [formControl]="startDate">
         <mat-datepicker-toggle matSuffix [for]="startDate1"></mat-datepicker-toggle>
         <mat-datepicker #startDate1></mat-datepicker>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field  appearance="fill">
         <mat-label>по</mat-label>
         <input matInput [matDatepicker]="endDate1" [formControl]="endDate">
         <mat-datepicker-toggle matSuffix [for]="endDate1"></mat-datepicker-toggle>
@@ -38,9 +43,10 @@
     &nbsp;
     <!-- конец фильтр по датам -->
     <!--фильтр по направлению-->
-    <mat-form-field>
+    <mat-form-field  appearance="fill">
         <mat-label>Направление</mat-label>
-        <mat-select [formControl]="destinationConrol" multiple>
+        <mat-select #destinationSelect [formControl]="destinationConrol" multiple>
+            <mat-option  (click)="toogleDestinationSelect()" [value]="0">Выбрать все</mat-option>
             <mat-select-trigger>
             {{destinationConrol.value ? destinationConrol.value[0] : ''}}
             <span *ngIf="destinationConrol.value?.length > 1" class="example-additional-selection">
@@ -53,9 +59,10 @@
     &nbsp;
     <!--конец фильтр по направлению-->
     <!--Фильтр по статусам-->
-    <mat-form-field>
+    <mat-form-field  appearance="fill">
         <mat-label>Статус</mat-label>
-        <mat-select [formControl]="statusesFormControl" multiple>
+        <mat-select #orderStatusSelect  [formControl]="statusesFormControl" multiple>
+            <mat-option  (click)="toogleStatusSelect()" [value]="0">Выбрать все</mat-option>
             <mat-select-trigger>
             {{statusesFormControl.value ? getStatusDescription(statusesFormControl.value[0]) : ''}}
             <span *ngIf="statusesFormControl.value?.length > 1" class="example-additional-selection">
@@ -80,8 +87,8 @@
         </button>
     </span>
     <!--конец Кнопка поиска-->
-
-</mat-expansion-panel>
+    <mat-button-toggle value="autoUpdate" (click)="toogleAutoUpdate()">Авто</mat-button-toggle>
+<!--</mat-expansion-panel> -->
 
 
 <!-- HeaderTable-->
