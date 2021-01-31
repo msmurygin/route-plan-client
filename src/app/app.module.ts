@@ -63,6 +63,7 @@ import { SkuClaimsDetailComponent } from './sku-claims-detail/sku-claims-detail.
 import { ReplenishmentPriorityComponent } from './replenishment-priority/replenishment-priority.component';
 import { RusDateProvider } from './RusDateProvider';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {CalendarModule} from 'primeng/calendar';
 @NgModule({
   declarations: [
     AppComponent,
@@ -119,7 +120,8 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     ConfirmDialogModule,
     MultiSelectModule,
     MatGridListModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    CalendarModule
   ],
   providers: [
     RestService,

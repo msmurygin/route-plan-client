@@ -28,7 +28,7 @@ export interface PlanRouteDetailTable {
     loadEnd: Date;
     loadDuration: string;
     shipped: number;
-    truckLeaving: number;
+    truckLeaving: Date;
     shippedItems: number;
     shift:  string;
     routeClosed: number;
@@ -74,14 +74,14 @@ export interface OrderLineTable{
   susr2: string;
   reasonCode: number;
   showReason: number;
-  addDate: string;
+  addDate: Date;
   routeReady: string;
-  actualArrivalDate: string;
+  actualArrivalDate: Date;
   loadStart: string;
   loadEnd: string;
   loadDuration: string;
   shipDate: string;
-  vehicleLeftDate: string;
+  vehicleLeftDate: Date;
   orderClosed: number;
   leftToControl: number;
   leftToPick: number;

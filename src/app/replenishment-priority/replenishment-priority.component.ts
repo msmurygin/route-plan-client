@@ -83,25 +83,20 @@ export class ReplenishmentPriorityComponent implements OnInit {
     console.log(this.modifiedRows);
   }
 
-  save(){
-    
-   
+  save(): void {
     if ( this.modifiedRows && this.modifiedRows.length > 0 ){
       let body : IReplenishmentPriorityPutBody = {
         replenishmentUpdate :  [... this.modifiedRows]
       }
-    
-      if (body){
-        console.log( JSON.stringify(body));
-        this.service.put(ControllerURL.REPLENISHMENT_PRIORITY_URL, JSON.stringify(body)).subscribe(response =>{
-          this.messageService.add({life: 10000, closable:true, severity: 'success', summary: 'Операция прошла успешно', detail: "Данные обновлены" });
-          this.cancel();
-          this.searchClicked()
-        })
-      }
+      this.service.put(ControllerURL.REPLENISHMENT_PRIORITY_URL, JSON.stringify(body)).subscribe(response =>{
+        this.messageService.add({life: 10000, closable:true, severity: 'success', summary: 'Операция прошла успешно', detail: "Данные обновлены" });
+        this.cancel();
+        this.searchClicked()
+      })
+      
     }
   }
-  cancel(){
+  cancel(): void {
     if ( this.modifiedRows){
       while (this.modifiedRows.length) {
         this.modifiedRows.pop();

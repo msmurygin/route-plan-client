@@ -19,7 +19,7 @@
             (+{{orderTypesFormControl.value.length - 1}} {{orderTypesFormControl.value?.length === 2 ? 'другой' : 'других'}})
             </span>
         </mat-select-trigger>
-        <mat-option *ngFor="let orderType of orderTypes" [value]="orderType.code">{{orderType.description}}</mat-option>
+         <mat-option *ngFor="let orderType of orderTypes" [value]="orderType.code">{{orderType.description}}</mat-option>
         </mat-select>
     </mat-form-field>
     &nbsp;
@@ -127,12 +127,21 @@
 <p-contextMenu #cm [model]="menuItems"></p-contextMenu>
 
 <p-table  class="p-datatable-sm" 
-          [value]="detailDataSource" 
+          [value]="detailDataSource"
+          (onEditInit)="onEditInit($event)" 
+          (onEditComplete)="onEditComplete($event)"
           [paginator]="true" [rows]="10" [showCurrentPageReport]="true" 
           currentPageReportTemplate="Показанно с {first} по {last} из {totalRecords} записей" [rowsPerPageOptions]="[5,10,25,50,100]"
           [loading]="loading" dataKey="rowId " 
           [(contextMenuSelection)]="selectedDetail" [contextMenu]="cm"
           >
+          <ng-template pTemplate="caption">
+            <div class="p-d-flex">
+                <button *ngIf="modifiedRows.length > 0" pButton pRipple type="button" icon="pi pi-check" class="p-button-rounded p-button-outlined"  (click)="save()"></button>
+                &nbsp;
+                <button *ngIf="modifiedRows.length > 0" pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger p-button-outlined" (click)="cancel()"></button>
+            </div>
+        </ng-template>
   <ng-template pTemplate="header">
       <tr>
         <th class="th_header" *ngIf="false">№</th>
@@ -168,8 +177,8 @@
         <th class="th_header" width="6%">Приоритет</th>
       </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-item>
-      <tr [pContextMenuRow]="item">
+  <ng-template pTemplate="body" let-item let-rowData let-rowIndex="rowIndex">
+      <tr [pContextMenuRow]="item"  [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
           <td [class]="getStyleByShift(item)" *ngIf="false">{{item.rowId}}</td>
           <td [class]="getStyleByShift(item)">{{item.deliveryDate | date:'dd.MM.yyyy'}}</td>
           <td [class]="getStyleByShift(item)">
@@ -192,32 +201,81 @@
                 [queryParams]="{ externalloadid: item.externalloadid, loadusr2: item.loadUsr2}" >!!!</a>
             <div *ngIf="item.showReason != 1"class="p-text-center">Нет</div>
           </td>
-          <td [class]="getStyleByShift(item)"><div class="p-text-center"> </div>{{item.packingLocation}} </td>
-          <td [class]="getStyleByShift(item)">{{item.door}} </td>
+          <td class="edit-cursor" [class]="getStyleByShift(item)"  pEditableColumn [pEditableColumn]="rowData" [pEditableColumnField]="'packingLocation'" [pEditableColumnRowIndex]="rowIndex">
+              <p-cellEditor *ngIf="rowData.packingLocation != 'Разное'">
+                <ng-template pTemplate="input">
+                    <p-dropdown optionLabel="name" optionValue="code" [options]="packingLocationDataSource" [(ngModel)]="rowData.packingLocation" [style]="{'width':'100%'}"></p-dropdown>
+                </ng-template>
+                <ng-template pTemplate="output">
+                    {{rowData.packingLocation}}
+                </ng-template>
+            </p-cellEditor>
+            <div *ngIf="rowData.packingLocation == 'Разное'">{{rowData.packingLocation}}</div>
+          </td>
+          <td class="edit-cursor" [class]="getStyleByShift(item)"  pEditableColumn [pEditableColumn]="rowData" [pEditableColumnField]="'door'" [pEditableColumnRowIndex]="rowIndex">
+            <p-cellEditor *ngIf="rowData.door != 'Разное'">
+              <ng-template pTemplate="input">
+                  <p-dropdown optionLabel="name" optionValue="code" [options]="doorDataSource" [(ngModel)]="rowData.door" [style]="{'width':'100%'}"></p-dropdown>
+              </ng-template>
+              <ng-template pTemplate="output">
+                  {{rowData.door}}
+              </ng-template>
+          </p-cellEditor>
+          <div *ngIf="rowData.door == 'Разное'">{{rowData.door}}</div>
+          </td>
           <td [class]="getStyleByShift(item)">{{item.stdCube}} </td>
           <td [class]="getStyleByShift(item)">{{item.stdGrossWgt}} </td>
           <td [class]="getStyleByShift(item)">{{item.shippedItems}} </td>
           <td [class]="getStyleByShift(item)">{{item.status}} </td>
 
-          <td [class]="getStyleByShift(item)">{{item.susr2}} </td>
+          <td class="edit-cursor" [class]="getStyleByShift(item)"  pEditableColumn [pEditableColumn]="rowData" [pEditableColumnField]="'susr2'" [pEditableColumnRowIndex]="rowIndex">
+            <p-cellEditor *ngIf="rowData.susr2 != 'Разное'">
+                <ng-template pTemplate="input">
+                    <input matInput [(ngModel)]="rowData.susr2">
+                </ng-template>
+                <ng-template pTemplate="output">
+                    {{rowData.susr2}}
+                </ng-template>
+            </p-cellEditor>
+            <div *ngIf="rowData.susr2 == 'Разное'">{{rowData.susr2}}</div>
+          </td>
           <td [class]="getStyleByShift(item)">{{item.driverName}} </td>
           <td [class]="getStyleByShift(item)">{{item.loadUsr1}} </td>
 
-          <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.addDate | date:'dd.MM.yyyy'}} </td>
-          <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.routeReady | date:'dd.MM.yyyy'}} </td>
-          <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.actualArrivalDate | date:'dd.MM.yyyy'}} </td>
-          <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.loadStart | date:'dd.MM.yyyy'}} </td>
-          <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.loadEnd | date:'dd.MM.yyyy'}} </td>
+          <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.addDate | date:'dd.MM.yy'}} </td>
+          <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.routeReady | date:'dd.MM.yy'}} </td>
+          <td class="edit-cursor" [class]="getStyleByShift(item)" *ngIf="showDates"  pEditableColumn [pEditableColumn]="rowData" [pEditableColumnField]="'actualArrivalDate'" [pEditableColumnRowIndex]="rowIndex">
+            <p-cellEditor>
+                <ng-template pTemplate="input">
+                    <p-calendar [(ngModel)]="rowData.actualArrivalDate" [readonlyInput]="true" dateFormat="dd.MM.y" showTime="true" hourFormat="24"></p-calendar>
+                </ng-template>
+                <ng-template pTemplate="output">
+                    {{rowData.actualArrivalDate | date:'dd.MM.yy'}} 
+                </ng-template>
+            </p-cellEditor>
+          </td>
+          <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.loadStart | date:'dd.MM.yy'}} </td>
+          <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.loadEnd | date:'dd.MM.yy'}} </td>
           <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.loadDuration}} </td>
-          <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.shipped | date:'dd.MM.yyyy'}} </td>
-          <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.truckLeaving | date:'dd.MM.yyyy'}}</td>
+          <td [class]="getStyleByShift(item)" *ngIf="showDates">{{item.shipped | date:'dd.MM.yy'}} </td>
+          <td class="edit-cursor" [class]="getStyleByShift(item)" *ngIf="showDates" pEditableColumn [pEditableColumn]="rowData" [pEditableColumnField]="'truckLeaving'" [pEditableColumnRowIndex]="rowIndex">
+            <p-cellEditor>
+                <ng-template pTemplate="input">
+                    <p-calendar [(ngModel)]="rowData.truckLeaving" [readonlyInput]="true" dateFormat="dd.MM.y" showTime="true" hourFormat="24"></p-calendar>
+                </ng-template>
+                <ng-template pTemplate="output">
+                    {{rowData.truckLeaving | date:'dd.MM.yy'}} 
+                </ng-template>
+            </p-cellEditor>
+          </td>
           <td class="td_detail_buttons" >
             <span>
               <span *ngIf="item.replenishmentTask == 'Детали'">
                   <button pButton pRipple type="button" icon="pi pi-list" class="p-button-rounded p-button-text p-button-plain" (click)="gotoReplenishmentTask(item)"></button>
               </span>
-              <button pButton pRipple type="button" icon="pi pi-caret-up" class="p-button-rounded p-button-text p-button-plain"></button>
-              <button pButton pRipple type="button" icon="pi pi-caret-down" class="p-button-rounded p-button-text p-button-plain"></button>
+             
+              <button pButton pRipple type="button" icon="pi pi-caret-up" class="p-button-rounded p-button-text p-button-plain" (click)="changeReplenishmentPriority(item, 1)"></button>
+              <button pButton pRipple type="button" icon="pi pi-caret-down" class="p-button-rounded p-button-text p-button-plain" (click)="changeReplenishmentPriority(item, -1)"></button>
           </span> 
           </td>
 

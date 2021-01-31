@@ -16,6 +16,21 @@ import { CookieService } from 'ngx-cookie-service';
 import { HttpHeaders } from '@angular/common/http';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
+import { ReplenishmentTaskRequestBody } from '../dto/replenishment-task-request-body';
+
+
+/** структура для обновления данных таблицы POST запрос */
+export interface ITableUpdateRequestBody {
+  details: PlanRouteDetailTable[]
+}
+
+
+export interface ILocations{
+  code  : string;
+  name : string;
+}
+
+
 
 @Component({
   selector: 'route-plan-monitor',
@@ -45,7 +60,10 @@ export class RoutePlanMonitorComponent implements OnInit  {
   destinationConrol = new FormControl();
   orderTypesFormControl = new FormControl();
   statusesFormControl = new FormControl();
-  byShiftCheckBoxControl = true; // Shift Switcher 
+  private _byShiftCheckBoxControl  : boolean = false;// Shift Switcher 
+  private _showDates               : boolean  = false;
+
+
 
   /** Dto-шки */
   destinations         : String[]      = [];
@@ -53,18 +71,16 @@ export class RoutePlanMonitorComponent implements OnInit  {
   statuses             : Codelkup[]    = [];
   dataSource           : PlanRouteHeaderTable[];
   detailDataSource     : PlanRouteDetailTable[] = [];
-  
+ 
   loading              : boolean  = false;
-  filterPanelOpenState : boolean  = true;
-  showDates            : boolean  = false;
-  
-  menuItems            : MenuItem[];
-  selectedDetail       : PlanRouteDetailTable;
 
+  selectedDetail       : PlanRouteDetailTable;
+  menuItems            : MenuItem[];
   NAVIGATION           = NavigationURL;
+  
 
   //Auto update functionality
-  refreshIntervalId : any;
+  refreshIntervalId    : any;
   autoUpdate           : boolean = false;
  
   // Drop down batch select/unselect vars
@@ -75,6 +91,13 @@ export class RoutePlanMonitorComponent implements OnInit  {
   @ViewChild('orderStatusSelect') orderStatusSelect: MatSelect;
   @ViewChild('destinationSelect') destinationSelect: MatSelect;
 
+
+  //***********************************************************
+  // Editing table ********************************************
+  //***********************************************************
+  doorDataSource             : ILocations[] = [];
+  packingLocationDataSource  : ILocations[] = [];
+  modifiedRows               : PlanRouteDetailTable[] = [];
   
   constructor(private service : RestService, 
               private _dateFormatPipe: DateFormatPipe,
@@ -85,11 +108,44 @@ export class RoutePlanMonitorComponent implements OnInit  {
     this.loadStatusFilterData();
     this.loadOrderTypeFilterData();
     this.loadDestinationFilterData();
+
+    /** Подписываемся на события на именения фильтров  */
+
+    this.destinationConrol.valueChanges.subscribe(changes=>{
+      sessionStorage.setItem("dest-filter", changes)
+    })
+
+    this.startDate.valueChanges.subscribe(changes =>{
+      sessionStorage.setItem("startDate-filter", this._dateFormatPipe.transform(changes))
+    })
+    this.endDate.valueChanges.subscribe(changes => {
+      sessionStorage.setItem("endDate-filter", this._dateFormatPipe.transform(changes))
+    })
+
+    this.statusesFormControl.valueChanges.subscribe(changes =>{
+      sessionStorage.setItem("status-filter", changes)
+    })
+    this.orderTypesFormControl.valueChanges.subscribe(changes =>{
+      sessionStorage.setItem("orderType-filter", changes)
+    })
+
+
+
+    /**** Загрузка фильтров из хранилища сессий */
+    let _startDate : string = sessionStorage.getItem("startDate-filter");
+    let _endDate : string   = sessionStorage.getItem("endDate-filter");
+    let _byShift : string   = sessionStorage.getItem("byshift-filter");
+    let _showDate : string  = sessionStorage.getItem("showdates-filter");
+    if (_startDate) this.startDate.patchValue(new  Date(_startDate))
+    if (_endDate)this.endDate.patchValue(new  Date(_endDate))
+    if (_byShift)this.byShiftCheckBoxControl = (_byShift=="true")
+    if (_showDate)this.showDates = (_showDate == "true")
+    /****************************************** */
+   //this.searchClicked()
   }
 
-  ngOnInit(){
-
   
+  ngOnInit(){
     this.menuItems = [
       {label: 'Выпустить', icon: 'pi pi-fw pi-caret-right', command: () => this.menuAction.release(this.selectedDetail)},
       {label: 'Зарезервировать', icon: 'pi pi-fw pi-briefcase', command: () => this.menuAction.allocate(this.selectedDetail)},
@@ -101,14 +157,46 @@ export class RoutePlanMonitorComponent implements OnInit  {
       {label: 'Места без отметки', icon: 'pi pi-fw pi-map', command: () => this.menuAction.placesWithNoMarks(this.selectedDetail)},
       {label: 'Закрыть рейс', icon: 'pi pi-fw pi-check-square', command: () => this.menuAction.closeRoute(this.selectedDetail)},
     ]; 
+   
   }
 
-  
+  loadPackingLocation(){
+    let request = {
+      locationType : "PICKTO",
+      locationCategory : "PACK"
+    }
+    this.service.post(ControllerURL.LOCATION_URL, request).subscribe(data => {
+      let locs : string[] = data['locations'] ;
+      locs.forEach(item =>{
+        this.packingLocationDataSource.push({code: item, name: item});
+      })
+    })
+  }
+
+  loadDoors(){
+    let request = {
+      locationType : "DOOR",
+      locationCategory : "DOOR"
+    }
+    this.service.post(ControllerURL.LOCATION_URL, request).subscribe(data => {
+      let locs : string[] = data['locations'] ;
+      locs.forEach(item =>{
+        this.doorDataSource.push({code: item, name: item});
+      })
+    })
+  }
+
   
   searchClicked() {
     this.loading = true;
     let requestBody : RequestBody = this.createHttpRequestBody();
     this.service.post<PlanRouteHeaderTable>(ControllerURL.ROUTE_PLAN_TABLE_DATA_URL, requestBody).subscribe(response =>{
+      
+      // Loading table input comboboxes
+      this.loadPackingLocation();
+      this.loadDoors();
+      //
+
       this.loading = false;
       this.processHttpResponse(response);
     });
@@ -135,6 +223,15 @@ export class RoutePlanMonitorComponent implements OnInit  {
 
     this.detailDataSource = resp['details'];
     this.dataSource = HEADER_DATA;
+    // Format dates 
+    this.detailDataSource.forEach(item =>{
+      if (item.actualArrivalDate) {
+        item.actualArrivalDate = new Date(item.actualArrivalDate)
+      } 
+      if (item.truckLeaving) {
+        item.truckLeaving = new Date(item.truckLeaving)
+      } 
+    });
   }
   
   
@@ -154,23 +251,46 @@ export class RoutePlanMonitorComponent implements OnInit  {
   loadStatusFilterData(){
     this.service.get<Codelkup[]>(ControllerURL.STATUSES_URL).subscribe(response =>{
       this.statuses = response['codeLookUps'];
+      
+      /*** Загрузка сохраненных фильтров */
+      let savedFilterValue   : string = sessionStorage.getItem("status-filter")
+      if (savedFilterValue){
+        let valAsArray: string []  = savedFilterValue.split(",")
+        this.statusesFormControl.patchValue(valAsArray);
+      }
+      /******************************* */
     });
   }
   
   loadOrderTypeFilterData(){
     this.service.get<Codelkup[]>(ControllerURL.CODELKUP_URL + "?listName=ORDERTYPE").subscribe(response =>{
       this.orderTypes = response['codeLookUps'];
+      /*** Загрузка сохраненных фильтров */
+      let savedFilterValue   : string = sessionStorage.getItem("orderType-filter")
+      if (savedFilterValue){
+        let valAsArray: string []  = savedFilterValue.split(",")
+        this.orderTypesFormControl.patchValue(valAsArray);
+      }
+      /******************************* */
     });
   }
   
   loadDestinationFilterData(){
     this.service.get<String[]>(ControllerURL.DESTINATION_URL).subscribe(response =>{
       this.destinations = response['routes'];
+
+      /*** Загрузка сохраненных фильтров */
+      let savedFilterValue   : string = sessionStorage.getItem("dest-filter")
+      if (savedFilterValue){
+        let valAsArray: string []  = savedFilterValue.split(",")
+        this.destinationConrol.patchValue(valAsArray);
+      }
+      /******************************* */
     });
   }
   
   getOrderTypeDescription(code : string): string {
-    return code ? this.orderTypes.filter(item => item.code == code)[0].description : '';
+    return code && this.orderTypes ? this.orderTypes.filter(item => item.code == code)[0].description : '';
   }
   
   getStatusDescription(code : string): string {
@@ -187,6 +307,8 @@ export class RoutePlanMonitorComponent implements OnInit  {
   getStyleByShift(item : PlanRouteDetailTable ){
     return this.colorUtil.getStyleByShift(item)
   }
+
+  // ************* Выбрать все в выпадающих справочниках ******************************//
 
   toogleOrderTypeSelect() {
     this.orderTypeAllSelected = !this.orderTypeAllSelected;  // to control select-unselect
@@ -221,7 +343,6 @@ export class RoutePlanMonitorComponent implements OnInit  {
 
 
   toogleAutoUpdate(){
-    
     this.autoUpdate = !this.autoUpdate;
     if (this.autoUpdate){
        this.refreshIntervalId =  setInterval(() => { this.searchClicked();}, 10000);
@@ -229,4 +350,91 @@ export class RoutePlanMonitorComponent implements OnInit  {
       clearInterval(this.refreshIntervalId)
     }
   }
+
+  //******************************************** */
+  // При клике на редактируемое поле в таблице, 
+  // временно фиксируем значение в переменной
+  // focusValue, для того, чтобы потом определить
+  // поменялось ли значение или нет
+  focusValue : any;
+  onEditInit(event) : void {
+    this.focusValue = event.data[event.field] 
+  }
+
+
+  onEditComplete(event): void {
+    if (event.data[event.field] == " " || event.data[event.field] == this.focusValue) return;
+
+    if (this.modifiedRows){
+      let alreadyModified : any = this.modifiedRows.filter(item => item.rowId == event.data['rowId'])
+      if (alreadyModified.length > 0) {
+        let modifiedObject = alreadyModified[0];
+        let index = this.modifiedRows.indexOf(modifiedObject);
+        if (index >-1) this.modifiedRows.splice(index, 1);
+      }
+      this.modifiedRows.push(event.data)
+     
+    }
+    console.log(this.modifiedRows)
+  }
+
+  save(){
+    if ( this.modifiedRows && this.modifiedRows.length > 0 ){
+      let body : ITableUpdateRequestBody = {
+        details : [... this.modifiedRows]
+      }
+      this.service.put(ControllerURL.ROUTE_PLAN_TABLE_DATA_URL, body).subscribe(response =>{
+        this.messageService.add({life: 10000, closable:true, severity: 'success', summary: 'Операция прошла успешно', detail: "Данные обновлены" });
+        this.searchClicked();
+        this.cancel();
+      })
+    }
+  }
+
+  cancel(){
+    if (this.modifiedRows){
+      while (this.modifiedRows.length) {
+        this.modifiedRows.pop();
+      }
+    }
+  }
+
+
+
+  changeReplenishmentPriority(row : PlanRouteDetailTable, dir: number){
+    console.log(row)
+    let body : ReplenishmentTaskRequestBody = {
+      externLoadId   : row.externalloadid == row.loadUsr2? null : row.externalloadid,
+      orderKey       : row.externalloadid == row.loadUsr2? row.externalloadid : null,
+      changePriority : true,
+      priorityValue  : dir
+    }
+    this.service.post(ControllerURL.REPLENISHMENT_TASK_URL, body).subscribe(response => {
+      if ( response['replenishmentTasks']){
+        let size : number  = response['replenishmentTasks'].length;
+        let msg  : string  = "У "+ size + " позиций поменялся приоритет";
+        this.messageService.add({life: 10000, closable:true, severity: 'success', summary: 'Операция прошла успешно', detail: msg });
+      }
+    })
+  }
+
+
+  public get byShiftCheckBoxControl(): boolean{
+    return this._byShiftCheckBoxControl;
+  }
+
+  public set byShiftCheckBoxControl(value : boolean){
+    sessionStorage.setItem("byshift-filter", ""+value)
+    this._byShiftCheckBoxControl  = value;
+  }
+
+  public get showDates(): boolean{
+    return this._showDates;
+  }
+
+  public set showDates(value : boolean){
+    sessionStorage.setItem("showdates-filter", ""+value)
+    this._showDates  = value;
+  }
+
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ConfirmationService, Message, MessageService } from 'primeng/api';
-import { PlanRouteDetailTable } from '../dto/plan-route-detail-table';
+import { OrderLineTable, OrderListTable, PlanRouteDetailTable } from '../dto/plan-route-detail-table';
 import { OrderRestService } from './Operation';
 
 @Injectable({
@@ -30,24 +30,32 @@ export class TableMenuContextService {
               private orderOperations : OrderRestService) { }
 
   errorMessages : Message[] = [];
-    
+  
+  
+  /** Резервирвоания заказов из плана рейсов */
   release(row: PlanRouteDetailTable) {
-   
-    this.orderCheckingRoutine(row)
+    
+    this.orderCheckingRoutine(row.route, row.routeClosed, row.picked)
     
     if (this.errorMessages.length > 0){
         this.messageService.addAll(this.errorMessages);
         this.errorMessages = [];
         return;
     }
-    this.showConfirmDialog( this.RELEASE_TITLE, 
-                            this.RELEASE_ROUTE + row.loadUsr2 + this.QM, 
-                            () => this.orderOperations.release(row) 
-                          );
- }
+    this.showConfirmDialog(this.RELEASE_TITLE, 
+                           this.RELEASE_ROUTE + row.loadUsr2 + this.QM, 
+                           () => this.orderOperations.release(row));
+  }
+
+
+
+
+
+
+
   
   allocate(row: PlanRouteDetailTable) {
-    this.orderCheckingRoutine(row)
+    this.orderCheckingRoutine(row.route, row.routeClosed, row.picked)
     if (this.errorMessages.length > 0){
         this.messageService.addAll(this.errorMessages);
         this.errorMessages = [];
@@ -63,7 +71,7 @@ export class TableMenuContextService {
 
 
   cancelAllocation(row: PlanRouteDetailTable){
-    this.orderCheckingRoutine(row)
+    this.orderCheckingRoutine(row.route, row.routeClosed, row.picked)
     if (this.errorMessages.length > 0){
         this.messageService.addAll(this.errorMessages);
         this.errorMessages = [];
@@ -77,7 +85,7 @@ export class TableMenuContextService {
 
 
   closeRoute(row: PlanRouteDetailTable){
-    this.checkIfRouteIsClosed(row)
+    this.checkIfRouteIsClosed(row.route, row.routeClosed)
     if (this.errorMessages.length > 0){
       this.messageService.addAll(this.errorMessages);
       this.errorMessages = [];
@@ -90,7 +98,7 @@ export class TableMenuContextService {
 
 
   ship(row: PlanRouteDetailTable){
-    this.checkIfRouteIsClosed(row)
+    this.checkIfRouteIsClosed(row.route, row.routeClosed)
     if (this.errorMessages.length > 0){
       this.messageService.addAll(this.errorMessages);
       this.errorMessages = [];
@@ -119,19 +127,18 @@ export class TableMenuContextService {
   }
 
 
-  private orderCheckingRoutine(row: PlanRouteDetailTable): void{
-    this.checkIfRouteIsClosed(row)
-    this.checkIfOperationPermitted(row);
+  private orderCheckingRoutine(route: string, closed: number, picked: number): void{
+    this.checkIfRouteIsClosed(route, closed);
+    this.checkIfOperationPermitted(picked);
   }
 
   /**
    * Проверка если рейс уже закрыт
    * @param row 
    */
-  checkIfRouteIsClosed (row: PlanRouteDetailTable){
-    console.log( row.routeClosed );
-    let routeId = row.loadUsr2;
-    if ( row.routeClosed == 1){
+  checkIfRouteIsClosed (routeId: string, routeClosed : number){
+  
+    if ( routeClosed == 1){
       this.errorMessages.push({
         life: 5000, 
         closable: true, 
@@ -147,9 +154,9 @@ export class TableMenuContextService {
    * Любая операция запрещена если отобранно >=100 %
    * @param row 
    */
-  checkIfOperationPermitted (row: PlanRouteDetailTable) {
-    console.log( row.picked );
-    if ( row.picked >= 100){
+  checkIfOperationPermitted (qtyPicked : number) {
+  
+    if (qtyPicked >= 100){
       this.errorMessages.push({
         life: 5000, 
         closable: true, 

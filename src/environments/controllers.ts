@@ -28,4 +28,5 @@ export const ControllerURL = {
     CLAIMS_SKU_DETAIL_SERVICE_URL : environment.apiUrl  + environment.PRIVATE +"skuclaimsdetail",
     CREATE_INV_TASK_SERVICE_URL : environment.apiUrl  + environment.PRIVATE +"createtasks",
     SEND_TO_HOST_SERVICE_URL : environment.apiUrl  + environment.PRIVATE +"sendtohost",
+    LOCATION_URL : environment.apiUrl  + environment.PRIVATE +"location",
 };

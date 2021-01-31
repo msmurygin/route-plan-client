@@ -1,10 +1,11 @@
+<div class="page_title">Список заказов на отгрузку в рейсе {{loadUsr2 }}</div>
 <mat-toolbar color="secondary">
     <span class="cube_in_lane_text_style">{{nsqlDescription}}</span>
     <p-badge [value]="nsqlValue" severity="success"></p-badge>
     <div class="spacer"></div>
     <mat-checkbox class="showdates_checkbox" [(ngModel)]="showDates" color="primary" >Показывать даты</mat-checkbox>
 </mat-toolbar>
-<p-contextMenu #cm [model]="menuItems"></p-contextMenu>
+<p-contextMenu #tableMenu [model]="menuItems"></p-contextMenu>
 
 <p-table  class="p-datatable-sm" 
           [value]="orderDataSource" 
@@ -13,12 +14,19 @@
           [showCurrentPageReport]="true" 
           [loading]="loading" 
           currentPageReportTemplate="Показанно с {first} по {last} из {totalRecords} записей" [rowsPerPageOptions]="[5,10,25,50,100]"
-          [(contextMenuSelection)]="selectedOrderLine" [contextMenu]="cm"
+          [(contextMenuSelection)]="selectedOrderLine" [contextMenu]="tableMenu"
           sortField="route" sortMode="single" (onSort)="onSort()"
           dataKey="route"   
           [expandedRowKeys]="expandedRowKeys"
-          editMode="row"
-          >
+          (onEditInit)="onEditInit($event)" 
+          (onEditComplete)="onEditComplete($event)">
+    <ng-template pTemplate="caption">
+    <div class="p-d-flex">
+        <button *ngIf="modifiedRows.length > 0" pButton pRipple type="button" icon="pi pi-check" class="p-button-rounded p-button-outlined"  (click)="save()"></button>
+        &nbsp;
+        <button *ngIf="modifiedRows.length > 0" pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger p-button-outlined" (click)="cancel()"></button>
+    </div>
+    </ng-template>
   <ng-template pTemplate="header">
       <tr>
         <th class="th_header">Клиент</th>
@@ -69,8 +77,29 @@
         <th class="th_header_2" >{{round(orders.totalLoaded)}}</th>
         <th class="th_header_2" ></th>
         <th class="th_header_2" >{{round(orders.totalCalcQtyLane) }}</th>
-        <th class="th_header_2" ></th>
-        <th class="th_header_2" ></th>
+    
+        <th class="th_header_2 edit-cursor"  pEditableColumn [pEditableColumn]="orders" [pEditableColumnField]="'packingLocation'" [pEditableColumnRowIndex]="rowIndex">
+            <p-cellEditor *ngIf="orders.packingLocation != 'Разное'">
+              <ng-template pTemplate="input">
+                  <p-dropdown optionLabel="name" optionValue="code" [options]="packingLocationDataSource" [(ngModel)]="orders.packingLocation" [style]="{'width':'100%'}"></p-dropdown>
+              </ng-template>
+              <ng-template pTemplate="output">
+                  {{orders.packingLocation}}
+              </ng-template>
+          </p-cellEditor>
+         
+        </th>
+        <th class="th_header_2 edit-cursor"  pEditableColumn [pEditableColumn]="orders" [pEditableColumnField]="'door'" [pEditableColumnRowIndex]="rowIndex">
+            <p-cellEditor *ngIf="orders.packingLocation != 'Разное'">
+              <ng-template pTemplate="input">
+                  <p-dropdown optionLabel="name" optionValue="code" [options]="doorDataSource" [(ngModel)]="orders.door" [style]="{'width':'100%'}"></p-dropdown>
+              </ng-template>
+              <ng-template pTemplate="output">
+                  {{orders.door}}
+              </ng-template>
+          </p-cellEditor>
+         
+        </th>
         <th class="th_header_2" >{{round(orders.totalStdCube)}}</th>
         <th class="th_header_2" >{{round(orders.totalStdGrossWgt)}}</th>
         <th class="th_header_2" >{{orders.totalSelectedCartonIdQty}}</th>
@@ -78,19 +107,38 @@
         <th class="th_header_2" *ngIf="showDates"></th>
         <th class="th_header_2" *ngIf="showDates" ></th>
         <th class="th_header_2" *ngIf="showDates"></th>
+        <th class="th_header_2 edit-cursor" *ngIf="showDates" pEditableColumn [pEditableColumn]="orders" [pEditableColumnField]="'actualArrivalDate'" [pEditableColumnRowIndex]="rowIndex">
+            <p-cellEditor>
+                <ng-template pTemplate="input">
+                    <p-calendar [(ngModel)]="orders.actualArrivalDate" [readonlyInput]="true" dateFormat="dd.MM.y" showTime="true" hourFormat="24"></p-calendar>
+                </ng-template>
+                <ng-template pTemplate="output">
+                    {{ orders.actualArrivalDate | date:'dd.MM.yy' }}
+                </ng-template>
+            </p-cellEditor>
+        </th>
         <th class="th_header_2" *ngIf="showDates" ></th>
         <th class="th_header_2" *ngIf="showDates"></th>
         <th class="th_header_2" *ngIf="showDates"></th>
         <th class="th_header_2" *ngIf="showDates" ></th>
-        <th class="th_header_2" *ngIf="showDates" ></th>
-        <th class="th_header_2" *ngIf="showDates" ></th>
         <th class="th_header_2" *ngIf="!showDates" ></th>
         <th class="th_header_2" *ngIf="!showDates" ></th>
+        <th class="th_header_2 edit-cursor" *ngIf="showDates" pEditableColumn [pEditableColumn]="orders" [pEditableColumnField]="'vehicleLeftDate'" [pEditableColumnRowIndex]="rowIndex">
+            <p-cellEditor>
+                <ng-template pTemplate="input">
+                    <p-calendar [(ngModel)]="orders.vehicleLeftDate" [readonlyInput]="true" dateFormat="dd.MM.y" showTime="true" hourFormat="24"></p-calendar>
+                </ng-template>
+                <ng-template pTemplate="output">
+                    {{ orders.vehicleLeftDate | date:'dd.MM.yy' }}
+                </ng-template>
+            </p-cellEditor>
+       </th>
+
 
     </tr>
 </ng-template>
-    <ng-template pTemplate="rowexpansion" let-orderLine>
-        <tr *ngFor="let detail of getDetail(orderLine)">
+    <ng-template pTemplate="rowexpansion" let-orderLine let-rowIndex="rowIndex">
+        <tr *ngFor="let detail of getDetail(orderLine) index as i" [pContextMenuRow]="detail" >
             <td class="td_detail">
             
             </td>
@@ -110,47 +158,69 @@
             <td class="td_detail">{{detail.controlledQty}}</td>
             <td class="td_detail">{{ round(detail.packedQty) }}</td>
             <td class="td_detail">{{detail.loadedQty}}</td>
-            <td [class]="getRowColor(detail)">
+            <td [class]="getRowColor(detail)" >
                 <a *ngIf="detail.showReason === 1"class="exclamation-marks" >!!!</a>
                 <div *ngIf="detail.showReason != 1">Нет</div>
             </td>
             <td class="td_detail">{{round(detail.calcQtyLane) }}</td>
-           <!--<td class="td_detail">{{detail.packingLocation}}</td>--> 
-            <td class="td_detail" pEditableColumn>
-                <p-cellEditor>
-                    <ng-template pTemplate="input">
-                        <p-dropdown [options]="packingLocations" [(ngModel)]="detail.packingLocation" [style]="{'width':'100%'}"></p-dropdown>
-                    </ng-template>
-                    <ng-template pTemplate="output">
-                        {{detail.packingLocation}}
-                    </ng-template>
-                </p-cellEditor>
+           
+            <td class="td_detail edit-cursor"  pEditableColumn [pEditableColumn]="detail" [pEditableColumnField]="'packingLocation'" [pEditableColumnRowIndex]="rowIndex">
+                <p-cellEditor *ngIf="detail.packingLocation != 'Разное'">
+                  <ng-template pTemplate="input">
+                      <p-dropdown optionLabel="name" optionValue="code" [options]="packingLocationDataSource" [(ngModel)]="detail.packingLocation" [style]="{'width':'100%'}"></p-dropdown>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                      {{detail.packingLocation}}
+                  </ng-template>
+              </p-cellEditor>
+              <div *ngIf="detail.packingLocation == 'Разное'">{{detail.packingLocation}}</div>
             </td>
-           <!-- <td class="td_detail">{{detail.door}}</td>-->
-             <td class="td_detail" pEditableColumn>
-                <p-cellEditor>
-                    <ng-template pTemplate="input">
-                        <p-dropdown [options]="packingLocations" [(ngModel)]="detail.door" [style]="{'width':'100%'}"></p-dropdown>
-                    </ng-template>
-                    <ng-template pTemplate="output">
-                        {{detail.door}}
-                    </ng-template>
-                </p-cellEditor>
+            <td class="td_detail edit-cursor"  pEditableColumn [pEditableColumn]="detail" [pEditableColumnField]="'door'" [pEditableColumnRowIndex]="rowIndex">
+                <p-cellEditor *ngIf="detail.door != 'Разное'">
+                  <ng-template pTemplate="input">
+                      <p-dropdown optionLabel="name" optionValue="code" [options]="doorDataSource" [(ngModel)]="detail.door" [style]="{'width':'100%'}"></p-dropdown>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                      {{detail.door}}
+                  </ng-template>
+              </p-cellEditor>
+              <div *ngIf="detail.door == 'Разное'">{{detail.door}}</div>
             </td>
             <td class="td_detail">{{detail.stdCube}}</td>
             <td class="td_detail">{{detail.stdGrossWgt}}</td>
             <td class="td_detail">{{detail.selectedCartonIdQty}}</td>
             <td class="td_detail">{{detail.status}}</td>
             <td class="td_detail">{{detail.susr2}}</td>
-            <td class="td_detail" *ngIf="showDates">{{transformDate(detail.addDate) }}</td>
-            <td class="td_detail" *ngIf="showDates">{{transformDate(detail.routeReady) }}</td>
-            <td class="td_detail" *ngIf="showDates">{{transformDate(detail.actualArrivalDate) }}</td>
-            <td class="td_detail" *ngIf="showDates">{{transformDate(detail.loadStart) }}</td>
-            <td class="td_detail" *ngIf="showDates">{{transformDate(detail.loadEnd) }}</td>
-            <td class="td_detail" *ngIf="showDates">{{transformDate(detail.loadDuration) }}</td>
-            <td class="td_detail" *ngIf="showDates">{{transformDate(detail.shipDate) }}</td>
-            <td class="td_detail" *ngIf="showDates">{{transformDate(detail.vehicleLeftDate)}}</td>
-     
+            <td class="td_detail" *ngIf="showDates">{{detail.addDate | date:'dd.MM.yy'  }}</td>
+            <td class="td_detail" *ngIf="showDates">{{detail.routeReady | date:'dd.MM.yy'  }}</td>
+            <!-- <td class="td_detail" *ngIf="showDates">{{transformDate(detail.actualArrivalDate) }}</td> -->
+            <td class="td_detail edit-cursor" *ngIf="showDates" pEditableColumn [pEditableColumn]="detail" [pEditableColumnField]="'actualArrivalDate'" [pEditableColumnRowIndex]="rowIndex">
+                <p-cellEditor>
+                    <ng-template pTemplate="input">
+                        <p-calendar [(ngModel)]="detail.actualArrivalDate" [readonlyInput]="true" dateFormat="dd.MM.y" showTime="true" hourFormat="24"></p-calendar>
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                        {{ detail.actualArrivalDate | date:'dd.MM.yy' }}
+                    </ng-template>
+                </p-cellEditor>
+           </td>
+
+
+            <td class="td_detail" *ngIf="showDates">{{detail.loadStart | date:'dd.MM.yy' }}</td>
+            <td class="td_detail" *ngIf="showDates">{{detail.loadEnd | date:'dd.MM.yy' }}</td>
+            <td class="td_detail" *ngIf="showDates">{{detail.loadDuration }}</td>
+            <td class="td_detail" *ngIf="showDates">{{detail.shipDate | date:'dd.MM.yy' }}</td>
+            <!-- <td class="td_detail" *ngIf="showDates">{{transformDate(detail.vehicleLeftDate)}}</td> -->
+            <td class="td_detail edit-cursor" *ngIf="showDates" pEditableColumn [pEditableColumn]="detail" [pEditableColumnField]="'vehicleLeftDate'" [pEditableColumnRowIndex]="rowIndex">
+                <p-cellEditor>
+                    <ng-template pTemplate="input">
+                        <p-calendar [(ngModel)]="detail.vehicleLeftDate" [readonlyInput]="true" dateFormat="dd.MM.y" showTime="true" hourFormat="24"></p-calendar>
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                        {{ detail.vehicleLeftDate | date:'dd.MM.yy' }}
+                    </ng-template>
+                </p-cellEditor>
+           </td>
 
         </tr>
     </ng-template>

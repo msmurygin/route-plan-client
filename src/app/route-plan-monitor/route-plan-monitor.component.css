@@ -6,7 +6,9 @@ table {
     margin-left: 20px;
 }
 
-
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr  {
+    border-top: 2px solid #6d6d6d6e;
+}
 .styled-table {
     margin-left: 5px!important;;
     margin-right: 5px!important;
@@ -86,4 +88,9 @@ table {
     background-color: rgba(211, 211, 211, 0.109)
 }
 
-
+:host ::ng-deep .p-calendar .p-datepicker {
+    min-width: 400px;
+}
+.edit-cursor {
+    cursor: pointer;
+}
