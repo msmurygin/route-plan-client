@@ -71,6 +71,14 @@ export class RestService {
             catchError(this.handleError<T>('getRequest:: '+ _url))
         )
     }
+
+
+    asyncGet<T>(_url : any)
+    {
+        return this.http.get<T>(_url, this.httpOptions).toPromise();
+    }
+
+
     getWithError<T>(_url : any): Observable<T> {
         this.httpOptions = {
             headers: new HttpHeaders({

@@ -183,7 +183,7 @@ export class TableMenuContextService {
       accept: () => {
         command();
       }
-  });
+    });
   }
 
 }

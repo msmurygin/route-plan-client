@@ -40,6 +40,7 @@ export interface PlanRouteDetailTable {
   // Главная таблица
 export interface OrderListTable {
   route : string;
+  stop  : number;
   ordersCount : number;
   totalOrderLines: number;
   totalLeftToPickQty: number;
@@ -56,6 +57,7 @@ export interface OrderListTable {
 }
 
 export interface OrderLineTable{
+  stop : number;
   route : string;
   orderKey: string;
   externalOrderKey2: string;

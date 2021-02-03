@@ -141,12 +141,13 @@ export class RoutePlanMonitorComponent implements OnInit  {
     if (_byShift)this.byShiftCheckBoxControl = (_byShift=="true")
     if (_showDate)this.showDates = (_showDate == "true")
     /****************************************** */
-   //this.searchClicked()
+   
   }
 
   
   ngOnInit(){
     this.menuItems = [
+     
       {label: 'Выпустить', icon: 'pi pi-fw pi-caret-right', command: () => this.menuAction.release(this.selectedDetail)},
       {label: 'Зарезервировать', icon: 'pi pi-fw pi-briefcase', command: () => this.menuAction.allocate(this.selectedDetail)},
       {label: 'Отгрузка', icon: 'pi pi-fw pi-sign-out', command: () => this.menuAction.ship(this.selectedDetail)},
@@ -281,10 +282,13 @@ export class RoutePlanMonitorComponent implements OnInit  {
 
       /*** Загрузка сохраненных фильтров */
       let savedFilterValue   : string = sessionStorage.getItem("dest-filter")
+      
       if (savedFilterValue){
         let valAsArray: string []  = savedFilterValue.split(",")
-        this.destinationConrol.patchValue(valAsArray);
+        this.destinationConrol.setValue(valAsArray);
+        console.log(this.destinationConrol.value)
       }
+      this.searchClicked();
       /******************************* */
     });
   }

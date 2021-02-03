@@ -21,10 +21,14 @@ export interface IOrderListUpdateRequestBody {
   orderKey: string;
   packingLocation : string;
   door : string;
+  stop : number;
   vehicleArrival : Date;
   vehicleLeaving : Date;
 }
-
+export interface IStop{
+  code  : number;
+  name : string;
+}
 
 @Component({
   selector: 'order-list',
@@ -43,6 +47,7 @@ export class OrderListComponent implements OnInit {
   private CONFIG_KEY  : string = "LT_LANEVOLUME";
   private TITLE       : string = "Список заказов на отгрузку в рейсе ";
 
+  stopDataSource             : IStop[] = [];
   doorDataSource             : ILocations[] = [];
   packingLocationDataSource  : ILocations[] = [];
   modifiedRows               : OrderLineTable[] = [];
@@ -153,8 +158,14 @@ export class OrderListComponent implements OnInit {
       this.orderDataSource = response['orderList'];
 
       this.orderDataSource.forEach(routeDetail=>{
-         
-          // Format dates 
+          // Making stop values datasource
+          var value = this.stopDataSource.filter(item => item.code == routeDetail.stop)
+          if (value.length ==0) {
+            this.stopDataSource.push ({code: routeDetail.stop, name: ""+routeDetail.stop})
+          }
+          //....
+
+            // Format dates 
           routeDetail.details.forEach(item =>{
             if (item.actualArrivalDate) {
               item.actualArrivalDate = new Date(item.actualArrivalDate)
@@ -167,6 +178,7 @@ export class OrderListComponent implements OnInit {
             } 
           });
       });
+      //this.stopDataSource.push ({code: 1, name: "1"})
       this.expandAllRows()
     });
   }
@@ -285,11 +297,34 @@ export class OrderListComponent implements OnInit {
   }
 
 
-
+  setStopForCustomer(route: string , stop: number){
+    let ordersByRoute = this.orderDataSource.filter(item => item.route ==  route)[0];
+    console.log(ordersByRoute)
+    let orderDetails = ordersByRoute['details']
+    orderDetails.forEach(element => {
+      element['stop'] = stop;
+      this.modifiedRows.push(element)
+    });
+  }
 
   onEditComplete(event): void {
+    
 
-    if (event.data[event.field] == " " || event.data[event.field] == this.focusValue) return;
+    // Stop Change logic
+    if (event.field == "stop"){
+      if (event.data[event.field] == this.focusValue)  return;
+      let route = event.data['route'];
+      let newStop = event.data['stop'];
+      let oldStop = this.focusValue;
+      this.menuAction.showConfirmDialog("Подтвердите действие", 
+                                        "Вы подтверждаете изменение порядкового номера\n"+
+                                        "точки выгрузки для клиента "+route+" с "+oldStop+" на "+newStop+" ?", 
+                                        ()=> this.setStopForCustomer(route, newStop))
+      return;
+    }
+
+    if (event.data[event.field] == " " || event.data[event.field] == this.focusValue)  return;
+   
     if (event.data['details']){
       let details = event.data['details'];
       details.forEach(element => {
@@ -321,11 +356,12 @@ export class OrderListComponent implements OnInit {
       let bodyItem : IOrderListUpdateRequestBody[] = []
       this.modifiedRows.forEach(item =>{
          let orderDetailList : IOrderListUpdateRequestBody = {
-           orderKey : item.orderKey,
-           door     : item.door,
-           packingLocation : item.packingLocation,
-           vehicleArrival  : item.actualArrivalDate,
-           vehicleLeaving  : item.vehicleLeftDate
+           orderKey         : item.orderKey,
+           door             : item.door,
+           stop             : item.stop,
+           packingLocation  : item.packingLocation,
+           vehicleArrival   : item.actualArrivalDate,
+           vehicleLeaving   : item.vehicleLeftDate
          }
          bodyItem.push(orderDetailList);
       });
