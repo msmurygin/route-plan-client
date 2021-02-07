@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { ControllerURL } from 'src/environments/controllers';
+import { AuthService } from '../login/auth.service';
 import { RestService } from '../rest-service.service';
 
 
@@ -49,7 +50,8 @@ export class ReplenishmentPriorityComponent implements OnInit {
   dataSource : IReplenishmentPriorityDataSource[]= []
   loading    : boolean;
 
-  constructor(private service : RestService, private messageService : MessageService) { }
+  constructor(private service : RestService, private messageService : MessageService,
+    private auth : AuthService) { }
 
   ngOnInit(): void {
   }
@@ -103,6 +105,10 @@ export class ReplenishmentPriorityComponent implements OnInit {
       }
     }
    
+  }
+
+  isAdmin(): boolean {
+    return this.auth.isAdmin();
   }
 
 }

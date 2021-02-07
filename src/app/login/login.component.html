@@ -1,4 +1,21 @@
-<p>login works!</p>
-<input type="text" pInputText [(ngModel)]="login"/>
-<input type="password" pInputText [(ngModel)]="pass"/>
-<button pButton type="button" label="Click" (click)="onLogin()" ></button>
+<form [formGroup]="loginForm" (ngSubmit)=handleLogin()>
+
+
+  <div class="imgcontainer">
+    <h1>План рейсов.</h1>
+  </div>
+
+  <div class="container">
+    <div  class="login_container">
+      <label for="username"><b>Имя пользователя</b></label>
+      <input type="text" placeholder="Введите логин" id="username" formControlName="username" required>
+
+      <label for="pwd"><b>Пароль</b></label>
+      <input type="password" placeholder="Введите пароль" id="pwd"  formControlName="pwd"  required>
+
+      <button type="submit" >Вход</button>
+      <div class="alert alert-warning" *ngIf='invalidLogin'>{{errorMessage}}</div>
+    </div>
+
+  </div>
+</form>

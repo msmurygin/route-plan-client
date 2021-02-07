@@ -64,7 +64,7 @@
                 <td class="td_detail">{{item.priority}}</td>
                 <td class="td_detail">{{item.putawayZone}}</td>
                 <td class="td_detail" pEditableColumn [pEditableColumn]="rowData" [pEditableColumnField]="'priority'" [pEditableColumnRowIndex]="rowIndex">
-                    <p-cellEditor>
+                    <p-cellEditor *ngIf="isAdmin()">
                         <ng-template pTemplate="input">
                             <p-dropdown optionLabel="name" optionValue="code" [options]="priorities" [(ngModel)]="rowData.priority" [style]="{'width':'100%'}"></p-dropdown>
                         </ng-template>

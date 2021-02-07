@@ -1,14 +1,19 @@
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
+
 .search_btn, .shift_checkbox, .showdates_checkbox {
     margin-left: 20px;
+}
+
+:host ::ng-deep .p-datatable {
+    font-weight: 500;
+    font-size: 0.8em!important;
+    text-align: left;
 }
 
 :host ::ng-deep .p-datatable .p-datatable-tbody > tr  {
     border-top: 2px solid #6d6d6d6e;
 }
+
+
 .styled-table {
     margin-left: 5px!important;;
     margin-right: 5px!important;
@@ -18,49 +23,63 @@ table {
     box-shadow: 0 0 20px rgb(184, 184, 184);
 }
 .th_header {
-      padding: 0!important;
-    font-size: 0.7em!important;
-    text-align: center!important;
+    padding: 0!important;
+    /* font-weight: 400;
+    font-size: 0.65em!important; */
+    /* text-align: center!important; */
     background-color: rgba(211, 211, 211, 0.801)!important;
     /*border-bottom: 1px solid #3f51b5!important; */
 }
 
 .th_header_small {
     padding: 0!important;
-    font-size: 0.7em!important;
-    text-align: center!important;
+    /* font-weight: 400;
+    font-size: 0.65em!important; */
+    /* text-align: center!important; */
     background-color: rgba(211, 211, 211, 0.486)!important;
     border-bottom: 1px solid #3f51b5!important;
 }
 
+.td_detail_no_style {
+    
+    /* font-size : 0.65em!important; */
+    /* text-align: left!important; */
+    color: #000000!important;
+}
+
+
+
 .td_detail_day {
-    padding: 2px 2px 2px 2px !important;
-    word-wrap: break-word;
-    font-size : 0.7em!important;
-    text-align: left!important;
+   
+    padding-right: 2px !important;
+    /* font-size : 0.65em!important; */
+    /* text-align: left!important; */
     color: #000000!important;
     background-color: rgba(211, 211, 211, 0.109)
 }
 
 .td_detail_night {
-    padding: 2px 2px 2px 2px !important;
-    word-wrap: break-word;
-    font-size : 0.8em!important;
-    text-align: left!important;
+   
+    padding-right: 2px !important;
+    /* font-size : 0.65em!important; */
+    /* text-align: left!important; */
     color: #000000!important;
     background-color: rgb(	250, 250, 210)
 }
 
+
 .td_detail {
-    padding: 2px 2px 2px 2px !important;
-    word-wrap: break-word;
-    font-size : 0.7em!important;
-    font-weight: bold;
-    text-align: center!important;
+  
+    padding-right: 2px !important;
+    /* font-size : 0.65em!important;
+    font-weight: 500; */
+    /* text-align: center!important; */
     color: #6c757d!important;
     background-color: #E3F2FD; /*rgba(211, 211, 211, 0.109)*/
 }
-
+.overflow {
+    overflow: hidden;
+}
 .td_detail_buttons {
     flex: auto;
     padding: 0!important;
@@ -74,16 +93,13 @@ table {
 
 .exclamation-marks{
     color: rgb(104, 0, 0);
-    font-weight: bold;
-    font-size: 1em;
-    text-align: center!important;
 }
 
 .td_detail-no-word-wrap {
     overflow: hidden!important;
     padding: 2px 2px 2px 2px !important;
-    font-size : 0.6em!important;
-    text-align: center!important;
+    /* font-size : 0.6em!important; */
+    /* text-align: center!important; */
     color: #000000!important;
     background-color: rgba(211, 211, 211, 0.109)
 }
@@ -94,3 +110,45 @@ table {
 .edit-cursor {
     cursor: pointer;
 }
+
+/* :host ::ng-deep .p-datatable .p-datatable-tbody > tr:focus{
+    outline-color: #b40cdfef;
+    outline-style: inset;
+    outline-width: medium;
+} */
+
+
+.selected_row {
+    overflow: hidden;
+    padding-right: 2px !important;
+    /* font-size : 1em!important; */
+    text-align: left!important;
+    color: #000000!important;
+    background-color: rgba(211, 211, 211, 0.534)
+}
+
+
+
+:host ::ng-deep .p-button {
+    margin-right: .5rem;
+}
+
+
+:host ::ng-deep .p-button.p-button-icon-only {
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0.1rem 0;
+}
+
+:host ::ng-deep .p-inplace-display {
+    font-weight: 500;
+    text-decoration: underline;
+    color: rgb(26, 0, 143);
+    font-size : 0.8em!important; 
+    text-align: left!important;
+}
+
+:host ::ng-deep .p-inplace-content {
+    font-size : 0.8em!important; 
+    text-align: left!important;
+  }

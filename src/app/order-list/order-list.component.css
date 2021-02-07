@@ -1,3 +1,15 @@
+:host ::ng-deep .p-datatable {
+  font-weight: 500;
+  font-size: 0.7em!important;
+  text-align: left;
+}
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  text-align: left;
+  border: 1px solid #e9ecef;
+  border-width: 0 0 1px 0;
+  padding: 0!important;
+}
+
 .cube_in_lane_text_style {
     padding-right: 5px;
 }
@@ -11,36 +23,30 @@
 
 
 .th_header {
-    padding: 0!important;
-  font-size: 0.7em!important;
-
+  /* padding: 0!important; */
   text-align: center!important;
   background-color: rgba(211, 211, 211, 0.801)!important;
 }
 
 .th_header_2 {
-  padding: 0!important;
-  font-size: 0.7em!important;
+  /* padding: 0!important; */
+  font-weight: 800;
+  font-size: 1.1em;
   text-align: center!important;
   background-color: rgba(211, 211, 211, 0.959)!important;
 }
 .th_header_2_left{
-    padding: 0!important;
-    font-size: 0.7em!important;
-    font-weight: bold;
+    /* padding: 0!important; */
     text-align: left!important;
     background-color: rgba(211, 211, 211, 0.959)!important;
   }
   
 
 .td_detail {
-    padding: 2px 2px 2px 2px !important;
-    word-wrap: break-word;
-    font-size : 0.7em!important;
-    font-weight: bold;
+    /* padding: 2px 2px 2px 2px !important; */
     text-align: center!important;
-    color: #6c757d!important;
-    background-color: #E3F2FD; /*rgba(211, 211, 211, 0.109)*/
+    color: #000000!important;
+    background-color: #ffffff; /*rgba(211, 211, 211, 0.109)*/
 }
 
 .dirty-row {
@@ -63,4 +69,15 @@
 
 .edit-cursor {
   cursor: pointer;
+}
+.selected_row {
+  
+  text-align: left!important;
+  color: #000000!important;
+  background-color: rgba(146, 146, 146, 0.534)
+}
+
+.padding_right {
+  text-align: left!important;
+  margin-right: 10px;
 }

@@ -11,7 +11,9 @@ import { NavigationURL } from 'src/environments/navigation';
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { ILocations } from '../route-plan-monitor/route-plan-monitor.component';
 import { HttpErrorResponse } from '@angular/common/http';
-import { TableMenuContextService } from '../route-plan-monitor/table-menu-context.service';
+import { RoutePlanContextMenuService } from '../route-plan-monitor/table-menu-context.service';
+import { OrderListContextMenuService } from './order-list-menu.service';
+import { AuthService } from '../login/auth.service';
 
 export interface IBodyRequest{
   orderList : IOrderListUpdateRequestBody[];
@@ -73,10 +75,11 @@ export class OrderListComponent implements OnInit {
 
   constructor(private route          : ActivatedRoute,
               private service        : RestService,
-              private messageService: MessageService,
-              private  breadcrumb    : BreadcrumbComponent,
-              private menuAction: TableMenuContextService,
-              private colorUtil      : TableRowColorUtils) { 
+              private messageService : MessageService,
+              private breadcrumb     : BreadcrumbComponent,
+              private menuAction     : OrderListContextMenuService,
+              private colorUtil      : TableRowColorUtils,
+              private auth : AuthService ) { 
     this.home = {icon: 'pi pi-home', routerLink: '/'};
    
   }
@@ -95,19 +98,15 @@ export class OrderListComponent implements OnInit {
     this.modifiedRows = [];
 
     this.menuItems = [
-      {label: 'Выпустить', icon: 'pi pi-fw pi-caret-right', command: () => this.release()},
-      {label: 'Зарезервировать', icon: 'pi pi-fw pi-briefcase', },
-      {label: 'Отгрузка', icon: 'pi pi-fw pi-sign-out', },
-      {label: 'Отмена резервировани', icon: 'pi pi-fw pi-times', },
-      {label: 'Закрыть рейс', icon: 'pi pi-fw pi-check-square',},
+      {visible: this.isAdmin(), label: 'Выпустить', icon: 'pi pi-fw pi-caret-right', command: () => this.menuAction.release(this.selectedOrderLine)},
+      {visible: this.isAdmin(), label: 'Зарезервировать', icon: 'pi pi-fw pi-briefcase', command: () => this.menuAction.allocate(this.selectedOrderLine)},
+      {visible: this.isAdmin(), label: 'Отгрузка', icon: 'pi pi-fw pi-sign-out',  command: () => this.menuAction.ship(this.selectedOrderLine)},
+      {visible: this.isAdmin(), label: 'Отмена резервировани', icon: 'pi pi-fw pi-times',command: () => this.menuAction.cancel(this.selectedOrderLine) },
+      {visible: this.isAdmin(), label: 'Закрыть заказ', icon: 'pi pi-fw pi-check-square', command: () => this.menuAction.close(this.selectedOrderLine)},
     ]; 
   }
 
-   release(){
-     this.selectedOrderLine['externalLoadId'] = this.externalLoadId;
-     this.selectedOrderLine['loadusr2'] = this.loadUsr2;
-     //this.menuAction.releaseOrder(this.selectedOrderLine);
-   }
+ 
 
   /**
    * Обработка входящих параметров запроса
@@ -386,4 +385,60 @@ export class OrderListComponent implements OnInit {
       }
     }
   }
+
+
+  selectedRowStyleName : string;
+  selectedRowStyle : any; // Saving row ref
+
+  onRowSelect(event: any, template?: any) {
+   
+    // check if previous row has been saved
+    if (this.selectedRowStyle){
+      let elementChildrens = this.selectedRowStyle.children;
+      for (var i=0, child; child=elementChildrens[i]; i++) {
+        if (!child.classList.contains('td_detail_buttons')) {
+            child.classList.add(this.selectedRowStyleName)
+            child.classList.remove("selected_row")
+        }
+      }
+      
+      this.selectedRowStyle.classList.remove("td_detail_no_style")
+    }
+    // prev saved style 
+    this.selectedRowStyle = event['originalEvent'].path[1];
+
+
+    let elementChildrens: HTMLCollection = this.selectedRowStyle.children;
+    console.log(elementChildrens)
+    for (var i=0, child; child=elementChildrens[i]; i++) {
+        let classList = child.classList;
+        if (classList.contains('p-text-center')){
+          return;
+        }
+
+        if (classList.contains('td_detail_buttons'))
+            break;
+
+        for (var j=0; j < classList.length; j++){
+          var element = classList[j];
+          if (element.indexOf('td_detail') != -1){
+            this.selectedRowStyleName = element;
+            break;
+          }
+        }
+         
+        child.classList.remove(this.selectedRowStyleName)
+        child.classList.add('selected_row')
+    }
+    //event['originalEvent'].path[1].classList.add("selected_row")
+    event['originalEvent'].path[1].classList.add("td_detail_no_style")
+    
+  }
+
+
+  isAdmin(): boolean{
+    return this.auth.isAdmin();
+  }
+
 }
+

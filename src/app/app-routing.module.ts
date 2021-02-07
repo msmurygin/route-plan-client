@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { NavigationURL } from 'src/environments/navigation';
+import { AuthGuardService } from './auth-guard.service';
 import { ClaimsDetailsComponent } from './claims-details/claims-details.component';
 import { ClaimsComponent } from './claims/claims.component';
 import { LoginComponent } from './login/login.component';
@@ -15,17 +16,17 @@ import { SkuClaimsDetailComponent } from './sku-claims-detail/sku-claims-detail.
 
 
 const routes: Routes = [
-      { path:  "login",                                 component: LoginComponent },
-      { path:  NavigationURL.HOME.name,                 component: RoutePlanMonitorComponent },
-      { path:  NavigationURL.REPLENISHMENT.name,        component: ReplenishmentTaskComponent },
-      { path:  NavigationURL.PROBLEMS.name,             component: ProblemListComponent },
-      { path:  NavigationURL.ORDER_LIST.name,           component: OrderListComponent },
-      { path:  NavigationURL.ORDER_DETAIL.name,         component: OrderDetailComponent },
-      { path:  NavigationURL.SKU_BALANCE.name,          component: SkuBalanceComponent },
-      { path:  NavigationURL.CLAIMS.name,               component: ClaimsComponent },
-      { path:  NavigationURL.CLAIMS_DETAIL.name,        component: ClaimsDetailsComponent },
-      { path:  NavigationURL.CLAIMS_DETAIL_BY_SKU.name, component: SkuClaimsDetailComponent },
-      { path:  NavigationURL.REPLENISHMENT_PRIORITY.name, component: ReplenishmentPriorityComponent },
+      { path:  NavigationURL.HOME.name,                 component: LoginComponent},
+      { path:  NavigationURL.PLAN_ROUTE.name,           component: RoutePlanMonitorComponent, canActivate: [AuthGuardService] },
+      { path:  NavigationURL.REPLENISHMENT.name,        component: ReplenishmentTaskComponent, canActivate: [AuthGuardService]  },
+      { path:  NavigationURL.PROBLEMS.name,             component: ProblemListComponent, canActivate: [AuthGuardService]  },
+      { path:  NavigationURL.ORDER_LIST.name,           component: OrderListComponent, canActivate: [AuthGuardService]  },
+      { path:  NavigationURL.ORDER_DETAIL.name,         component: OrderDetailComponent, canActivate: [AuthGuardService]  },
+      { path:  NavigationURL.SKU_BALANCE.name,          component: SkuBalanceComponent, canActivate: [AuthGuardService]  },
+      { path:  NavigationURL.CLAIMS.name,               component: ClaimsComponent, canActivate: [AuthGuardService]  },
+      { path:  NavigationURL.CLAIMS_DETAIL.name,        component: ClaimsDetailsComponent, canActivate: [AuthGuardService]  },
+      { path:  NavigationURL.CLAIMS_DETAIL_BY_SKU.name, component: SkuClaimsDetailComponent, canActivate: [AuthGuardService]  },
+      { path:  NavigationURL.REPLENISHMENT_PRIORITY.name, component: ReplenishmentPriorityComponent , canActivate: [AuthGuardService] },
 ];
 
 @NgModule({

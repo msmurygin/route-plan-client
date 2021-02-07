@@ -18,76 +18,36 @@ export class RestService {
 
 
     post<T>(_url: any, body: any) : Observable<T> {
-        
-        this.httpOptions = {
-            headers: new HttpHeaders({
-            'Content-Type':  'application/json',
-            //~'token' : this.cookieService.get("token"),
-            //'username' : this.cookieService.get("username")
-            })
-        };
-
-        console.log("calling POST: "+ _url)
-        console.log( body )
-        return this.http.post<T>(_url, body, this.httpOptions)
-       .pipe(
+        return this.http.post<T>(_url, body).pipe(
             catchError(this.handleError<T>('postRequest:: '+ _url))
        )
     }
 
 
     put<T>(_url: any, body: any) : Observable<T> {
-        
-        this.httpOptions = {
-            headers: new HttpHeaders({
-            'Content-Type':  'application/json',
-            //~'token' : this.cookieService.get("token"),
-            //'username' : this.cookieService.get("username")
-            })
-        };
-
-        console.log("calling POST: "+ _url)
-        console.log( body )
-        return this.http.put<T>(_url, body, this.httpOptions)
-       .pipe(
+        return this.http.put<T>(_url, body).pipe(
             catchError(this.handleError<T>('putRequest:: '+ _url))
        )
     }
 
 
     getWithHeader<T>(_url : any, header: {}): Observable<T> {
-        console.log("calling GET : "+ _url)
-        return this.http.get<T>(_url, header)
-       .pipe(
+        return this.http.get<T>(_url, header).pipe(
             catchError(this.handleError<T>('getRequest:: '+ _url))
         )
     }
 
 
     get<T>(_url : any): Observable<T> {
-        console.log("calling GET : "+ _url)
-        return this.http.get<T>(_url, this.httpOptions)
-       .pipe(
+        return this.http.get<T>(_url).pipe(
             catchError(this.handleError<T>('getRequest:: '+ _url))
         )
     }
 
 
-    asyncGet<T>(_url : any)
-    {
-        return this.http.get<T>(_url, this.httpOptions).toPromise();
-    }
-
-
     getWithError<T>(_url : any): Observable<T> {
-        this.httpOptions = {
-            headers: new HttpHeaders({
-            'Content-Type':  'application/json',
-            //'token' : this.cookieService.get("token"),
-            //'username' : this.cookieService.get("username")
-            })
-        };
-        return this.http.get<T>(_url, this.httpOptions);
+        let httpOptions = {headers: new HttpHeaders({'Content-Type':  'application/json'})};
+        return this.http.get<T>(_url, httpOptions);
     }
 
     postWithError<T>(_url: any, body: any) : Observable<T> {
@@ -99,9 +59,7 @@ export class RestService {
             //'username' : this.cookieService.get("username")
             })
         };
-
-        console.log("calling POST WITH ERROR: "+ _url)
-        return this.http.post<T>(_url, body, this.httpOptions)
+        return this.http.post<T>(_url, body)
     }
    
 

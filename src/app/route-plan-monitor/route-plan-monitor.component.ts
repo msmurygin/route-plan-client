@@ -11,12 +11,11 @@ import { RequestBody } from '../dto/plan-route-request-body';
 import { Router } from '@angular/router';
 import { TableRowColorUtils } from '../table-row-color-utils';
 import {NavigationURL} from '../../environments/navigation';
-import { TableMenuContextService } from './table-menu-context.service';
-import { CookieService } from 'ngx-cookie-service';
-import { HttpHeaders } from '@angular/common/http';
+import { RoutePlanContextMenuService } from './table-menu-context.service';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { ReplenishmentTaskRequestBody } from '../dto/replenishment-task-request-body';
+import { AuthService } from '../login/auth.service';
 
 
 /** структура для обновления данных таблицы POST запрос */
@@ -104,7 +103,8 @@ export class RoutePlanMonitorComponent implements OnInit  {
               private messageService: MessageService,
               private router : Router,
               private colorUtil : TableRowColorUtils,
-              private menuAction: TableMenuContextService) { 
+              private menuAction: RoutePlanContextMenuService,
+              private auth      : AuthService) { 
     this.loadStatusFilterData();
     this.loadOrderTypeFilterData();
     this.loadDestinationFilterData();
@@ -146,17 +146,22 @@ export class RoutePlanMonitorComponent implements OnInit  {
 
   
   ngOnInit(){
+    let   replMenuItems        : MenuItem[] = [
+      {label: 'Поднять приоритет', icon: 'pi pi-arrow-circle-up', command: () => this.changeReplenishmentPriority(this.selectedDetail, 1)},
+      {label: 'Понизить приоритет', icon: 'pi pi-arrow-circle-down', command: () => this.changeReplenishmentPriority(this.selectedDetail, -1)}
+    ];
     this.menuItems = [
-     
-      {label: 'Выпустить', icon: 'pi pi-fw pi-caret-right', command: () => this.menuAction.release(this.selectedDetail)},
-      {label: 'Зарезервировать', icon: 'pi pi-fw pi-briefcase', command: () => this.menuAction.allocate(this.selectedDetail)},
-      {label: 'Отгрузка', icon: 'pi pi-fw pi-sign-out', command: () => this.menuAction.ship(this.selectedDetail)},
-      {label: 'Отмена резервировани', icon: 'pi pi-fw pi-times', command: () => this.menuAction.cancelAllocation(this.selectedDetail)},
-      {label: 'Комплектовочная ведомость', icon: 'pi pi-fw pi-file-pdf', command: () => this.menuAction.pickList(this.selectedDetail)},
-      {label: 'Акт приема/передачи клиенту', icon: 'pi pi-fw pi-file-o', command: () => this.menuAction.acceptenceAct(this.selectedDetail)},
-      {label: 'Сборка по бумаге', icon: 'pi pi-fw pi-file-excel', command: () => this.menuAction.pickByPaper(this.selectedDetail)},
-      {label: 'Места без отметки', icon: 'pi pi-fw pi-map', command: () => this.menuAction.placesWithNoMarks(this.selectedDetail)},
-      {label: 'Закрыть рейс', icon: 'pi pi-fw pi-check-square', command: () => this.menuAction.closeRoute(this.selectedDetail)},
+      {label: 'Детали', icon: 'pi pi-list', command: () => this.gotoReplenishmentTask(this.selectedDetail)},
+      {visible : this.auth.isAdmin(), label: 'Пополнение',icon: 'pi pi-download', items: replMenuItems},
+      {visible : this.auth.isAdmin(), label: 'Выпустить', icon: 'pi pi-fw pi-caret-right', command: () => this.menuAction.release(this.selectedDetail)},
+      {visible : this.auth.isAdmin(), label: 'Зарезервировать', icon: 'pi pi-fw pi-briefcase', command: () => this.menuAction.allocate(this.selectedDetail)},
+      {visible : this.auth.isAdmin(), label: 'Отгрузка', icon: 'pi pi-fw pi-sign-out', command: () => this.menuAction.ship(this.selectedDetail)},
+      {visible : this.auth.isAdmin(), label: 'Отмена резервировани', icon: 'pi pi-fw pi-times', command: () => this.menuAction.cancelAllocation(this.selectedDetail)},
+      {visible : true, label: 'Комплектовочная ведомость', icon: 'pi pi-fw pi-file-pdf', command: () => this.menuAction.pickList(this.selectedDetail)},
+      {visible : true, label: 'Акт приема/передачи клиенту', icon: 'pi pi-fw pi-file-o', command: () => this.menuAction.acceptenceAct(this.selectedDetail)},
+      {visible : true, label: 'Сборка по бумаге', icon: 'pi pi-fw pi-file-excel', command: () => this.menuAction.pickByPaper(this.selectedDetail)},
+      {visible : true, label: 'Места без отметки', icon: 'pi pi-fw pi-map', command: () => this.menuAction.placesWithNoMarks(this.selectedDetail)},
+      {visible : this.auth.isAdmin(), label: 'Закрыть рейс', icon: 'pi pi-fw pi-check-square', command: () => this.menuAction.closeRoute(this.selectedDetail)},
     ]; 
    
   }
@@ -441,4 +446,47 @@ export class RoutePlanMonitorComponent implements OnInit  {
     this._showDates  = value;
   }
 
+  selectedRowStyleName : string;
+  selectedRowStyle : any; // Saving row ref
+
+  onRowSelect(event: any, template?: any) {
+   
+    // check if previous row has been saved
+    if (this.selectedRowStyle){
+      let elementChildrens = this.selectedRowStyle.children;
+      for (var i=0, child; child=elementChildrens[i]; i++) {
+        if (!child.classList.contains('td_detail_buttons')) {
+            child.classList.add(this.selectedRowStyleName)
+            child.classList.remove("selected_row")
+        }
+      }
+      
+      this.selectedRowStyle.classList.remove("td_detail_no_style")
+    }
+    // prev saved style 
+    this.selectedRowStyle = event['originalEvent'].path[1];
+
+
+    let elementChildrens: HTMLCollection = this.selectedRowStyle.children;
+    for (var i=0, child; child=elementChildrens[i]; i++) {
+        let classList = child.classList;
+        if (classList.contains('p-text-center')) return;
+        if (classList.contains('td_detail_buttons')) break;
+        for (var j=0; j < classList.length; j++){
+          var element = classList[j];
+          if (element.indexOf('td_detail') != -1){
+            this.selectedRowStyleName = element;
+            break;
+          }
+        }
+        child.classList.remove(this.selectedRowStyleName)
+        child.classList.add('selected_row')
+    }
+    event['originalEvent'].path[1].classList.add("td_detail_no_style")
+    
+  }
+
+  isAdmin(): boolean {
+    return this.auth.isAdmin();
+  }
 }

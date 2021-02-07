@@ -6,6 +6,7 @@
     <div class="spacer"></div>
     <mat-checkbox class="showdates_checkbox" [(ngModel)]="showDates" color="primary" >Показывать даты</mat-checkbox>
 </mat-toolbar>
+
 <p-contextMenu #tableMenu [model]="menuItems"></p-contextMenu>
 
 <p-table  class="p-datatable-sm" 
@@ -19,6 +20,7 @@
           sortField="route" sortMode="single" (onSort)="onSort()"
           dataKey="route"   
           [expandedRowKeys]="expandedRowKeys"
+          (onContextMenuSelect)="onRowSelect($event)"
           (onEditInit)="onEditInit($event)" 
           (onEditComplete)="onEditComplete($event)">
     <ng-template pTemplate="caption">
@@ -159,7 +161,7 @@
             <td class="td_detail">
                 
             </td>
-            <td class="td_detail">{{detail.orderKey}}</td>
+            <td class="td_detail padding_right">{{detail.orderKey}}</td>
             <td class="td_detail">
                 <a  [routerLink]="[NAVIGATION.ORDER_DETAIL.url]" 
                     [queryParams]="{ orderKey: detail.orderKey, externalOrderKey2: detail.externalOrderKey2}"> 
@@ -177,7 +179,7 @@
             <td class="td_detail">{{detail.loadedQty}}</td>
             <td [class]="getRowColor(detail)" >
                 <a *ngIf="detail.showReason === 1"class="exclamation-marks" >!!!</a>
-                <div *ngIf="detail.showReason != 1">Нет</div>
+                <div *ngIf="detail.showReason != 1"class="p-text-center">Нет</div>
             </td>
             <td class="td_detail">{{round(detail.calcQtyLane) }}</td>
            

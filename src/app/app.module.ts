@@ -49,10 +49,10 @@ import {CheckboxModule} from 'primeng/checkbox';
 import {InputNumberModule} from 'primeng/inputnumber';
 import { SettingsComponent } from './settings/settings.component';
 import {BlockUIModule} from 'primeng/blockui';
-import { TableMenuContextService } from './route-plan-monitor/table-menu-context.service';
+import { RoutePlanContextMenuService } from './route-plan-monitor/table-menu-context.service';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {ConfirmationService} from 'primeng/api';
-import { UserService } from './user.service';
+
 import { LoginComponent } from './login/login.component';
 import {CookieService} from 'ngx-cookie-service';
 import { ClaimsComponent } from './claims/claims.component';
@@ -64,6 +64,9 @@ import { ReplenishmentPriorityComponent } from './replenishment-priority/repleni
 import { RusDateProvider } from './RusDateProvider';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {CalendarModule} from 'primeng/calendar';
+import {InplaceModule} from 'primeng/inplace';
+import { httpInterceptorProviders } from './http-interceptor.service';
+import { AuthGuardService } from './auth-guard.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -121,7 +124,8 @@ import {CalendarModule} from 'primeng/calendar';
     MultiSelectModule,
     MatGridListModule,
     MatButtonToggleModule,
-    CalendarModule
+    CalendarModule,
+    InplaceModule
   ],
   providers: [
     RestService,
@@ -129,11 +133,12 @@ import {CalendarModule} from 'primeng/calendar';
     TableRowColorUtils,
     MessageService,
     ConfirmationService,
-    TableMenuContextService,
+    RoutePlanContextMenuService,
     CookieService,
     { provide: MAT_DATE_LOCALE, useValue: 'ru-RU'},
-    { provide: DateAdapter, useClass: RusDateProvider }
-    //UserService
+    { provide: DateAdapter, useClass: RusDateProvider },
+    httpInterceptorProviders,
+    AuthGuardService
   ],
   bootstrap: [AppComponent]
 })

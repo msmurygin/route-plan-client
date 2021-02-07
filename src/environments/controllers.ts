@@ -1,7 +1,8 @@
 import { environment } from './environment';
 
 export const ControllerURL = {
-    LOGIN : environment.apiUrl + "login",
+    LOGIN : environment.apiUrl + environment.PUBLIC + "login",
+    LOGOUT : environment.apiUrl + environment.PUBLIC + "logout",
     VERSION_URL : environment.apiUrl + environment.PUBLIC + "version",
     ACTIVE_USERS_URL : environment.apiUrl   + environment.PRIVATE + "activeusers",
     CODELKUP_URL : environment.apiUrl  + environment.PRIVATE + "codelkup",
@@ -19,6 +20,7 @@ export const ControllerURL = {
     RELEASE_URL : environment.apiUrl  + environment.PRIVATE +"orders/release",
     ALLOCATE_URL : environment.apiUrl  + environment.PRIVATE +"orders/allocate",
     CLOSE_ORDER_URL : environment.apiUrl  + environment.PRIVATE +"orders/close",
+    CLOSE_ONE_ORDER_URL : environment.apiUrl  + environment.PRIVATE +"orders/closeorder",
     UNALLOCATE_ORDER_URL : environment.apiUrl  + environment.PRIVATE +"orders/cancel",
     SHIP_ORDER_URL : environment.apiUrl  + environment.PRIVATE + "orders/ship",
     REPORT_SERVICE_URL : environment.apiUrl  + environment.PRIVATE +"reports/url",

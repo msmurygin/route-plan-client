@@ -12,32 +12,46 @@ export class OrderRestService{
 
     constructor(private rest : RestService, private messageService : MessageService){}
 
-    release(row: PlanRouteDetailTable){
+    release(body: any){
         console.log("Запуск волны");
-        this.doPOST(ControllerURL.RELEASE_URL, row);
+        this.doPOST(ControllerURL.RELEASE_URL, body);
     }
 
 
-    allocate(row: PlanRouteDetailTable){
+    allocate(body : any){
         console.log("Резервирование заказов");
-        this.doPOST(ControllerURL.ALLOCATE_URL, row);
+        this.doPOST(ControllerURL.ALLOCATE_URL, body);
     }
 
 
-    close(row: PlanRouteDetailTable){
+    close(_url: string, body: any){
         console.log("Закрытие заказов");
-        this.doPOST(ControllerURL.CLOSE_ORDER_URL, row);
+        this.doPOST(_url, body);
     }
 
-    unallocate(row: PlanRouteDetailTable){
+    unallocate(body: any){
         console.log("Отмена резервирования");
-        this.doPOST(ControllerURL.UNALLOCATE_ORDER_URL, row);
+        this.doPOST(ControllerURL.UNALLOCATE_ORDER_URL, body);
     }
 
-    ship(row: PlanRouteDetailTable){
+    ship(body: any){
         console.log("Отгрузка");
-        this.doPOST(ControllerURL.SHIP_ORDER_URL, row);
+        this.doPOST(ControllerURL.SHIP_ORDER_URL, body);
     }
+
+    doPOST(url: string, body : any): void {
+        this.rest.postWithError(url, body).subscribe(response => {
+            if (response && response['header']){
+                this.messageService.add({life: 10000, closable: true, severity: 'success', summary: response['header'], detail: response['message']});
+            }
+        }, error =>{
+            this.messageService.add({life: 10000, closable: true, severity: 'error', summary: "Ошибка", detail: error.error.message});
+        })
+    }
+
+
+
+
     picklist(row: PlanRouteDetailTable){
         console.log("Комплектовочная ведомость ");
         let reportName = row.loadUsr2 == row.externalloadid ? "rep_LoadPrintCB.rptdesign" : "rep_LoadPrint.rptdesign";
@@ -86,11 +100,5 @@ export class OrderRestService{
     }
 
 
-    doPOST(url: string, row : PlanRouteDetailTable): void {
-        this.rest.post(url, {loadUsr2: row.loadUsr2, externalLoadId: row.externalloadid }).subscribe(response => {
-            if (response && response['header']){
-                this.messageService.add({life: 10000, closable:true, severity: 'success', summary: response['header'], detail: response['message']});
-            }
-        })
-    }
+  
 }

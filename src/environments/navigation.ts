@@ -1,6 +1,7 @@
 
 export const NavigationURL = {
     HOME                 :  {name: "",              url: "/"},
+    PLAN_ROUTE           :  {name: "planroute",     url: "/planroute"},
     ORDER_DETAIL         :  {name: "orderdetail",   url: "/orderdetail"},
     ORDER_LIST           :  {name: "orderlist",     url: "/orderlist"},
     PROBLEMS             :  {name: "problems",      url: "/problems"},

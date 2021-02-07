@@ -1,10 +1,10 @@
 <p-toast></p-toast>
 <p>
-    <mat-toolbar class="buttons-print">
+    <mat-toolbar *ngIf="isLoggedIn()"  class="buttons-print">
       <button mat-icon-button aria-label="Меню" [matMenuTriggerFor]="menu">
         <mat-icon>menu</mat-icon>
       </button>
-      <button mat-icon-button  aria-label="Домой" routerLink="/">
+      <button mat-icon-button  aria-label="Домой" [routerLink]="planRouteURL">
         <mat-icon>home</mat-icon>
       </button>
       
@@ -14,16 +14,18 @@
       <button mat-icon-button  aria-label="Вперед" (click)="goForward()">
         <mat-icon>keyboard_arrow_right</mat-icon>
       </button>
+      <!-- Active users component -->
       <span class="spacer"></span>
       <active-users></active-users>
       <span class="spacer"></span>
-     
-      <button mat-icon-button  aria-label="Вход">
+     <!-- End of Active users -->
+      {{ getUserContext().fullyQualifiedName }}
+      <button mat-icon-button  aria-label="Вход" (click)="logOut()">
         <mat-icon>exit_to_app</mat-icon>
       </button>
     </mat-toolbar>
   </p>
-  <mat-menu #menu="matMenu">
+  <mat-menu #menu="matMenu" >
     <!-- <button mat-menu-item (click)="gotoClaims()">
       <mat-icon>sticky_note_2</mat-icon>
       <span>Работа с претензиями</span>
@@ -41,7 +43,7 @@
       <span>Настройки</span>
     </button>
   </mat-menu>
-  <settings [showDialog]="isDisplayDialogShown" (dialogClosedEvent)="dialogClosedEvent($event)"></settings>
+  <settings *ngIf="isLoggedIn()" [showDialog]="isDisplayDialogShown" (dialogClosedEvent)="dialogClosedEvent($event)"></settings>
   <p-blockUI [blocked]="uiBlocked"></p-blockUI>
 <div class="container">
     <router-outlet></router-outlet>

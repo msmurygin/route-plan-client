@@ -1,33 +1,40 @@
 import { Injectable } from '@angular/core';
 import { ConfirmationService, Message, MessageService } from 'primeng/api';
+import { ControllerURL } from 'src/environments/controllers';
 import { OrderLineTable, OrderListTable, PlanRouteDetailTable } from '../dto/plan-route-detail-table';
 import { OrderRestService } from './Operation';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TableMenuContextService {
-  private RELEASE_TITLE = "Выпуск";
-  private RELEASE_ROUTE = "Выпустить рейс ";
+export class RoutePlanContextMenuService {
+  protected RELEASE_TITLE = "Выпуск";
+  protected RELEASE_ROUTE = "Выпустить рейс ";
+  protected RELEASE_ORDER = "Выпустить заказ ";
 
-  private ALLOCATE_TITLE = "Резервирование";
-  private ALLOCATE_ROUTE = "Зарезервировать рейс ";
+  protected ALLOCATE_TITLE = "Резервирование";
+  protected ALLOCATE_ROUTE = "Зарезервировать рейс ";
+  protected ALLOCATE_ORDER = "Зарезервировать заказ ";
 
-  private CLOSE_TITLE = "Закрытие";
-  private CLOSE_ROUTE = "Закрыть рейс ";
+  protected CLOSE_TITLE = "Закрытие";
+  protected CLOSE_ROUTE = "Закрыть рейс ";
+  protected CLOSE_ORDER = "Закрыть заказ ";
 
-  private UN_ALLOCATE_TITLE = "Разрезервирование";
-  private UN_ALLOCATE_ROUTE = "Разрезервировать рейс ";
+  protected UN_ALLOCATE_TITLE = "Разрезервирование";
+  protected UN_ALLOCATE_ROUTE = "Разрезервировать рейс ";
+  protected UN_ALLOCATE_ORDER = "Разрезервировать заказ ";
 
-  private SHIP_TITLE = "Отгрузка";
-  private SHIP_ROUTE = "отгрузить рейс ";
+  protected SHIP_TITLE = "Отгрузка";
+  protected SHIP_ROUTE = "отгрузить рейс ";
 
-  private QM  = " ?";
+  protected SHIP_ORDER= "отгрузить заказ ";
+
+  protected QM  = " ?";
 
 
-  constructor(private confirmationService: ConfirmationService,
-              private messageService : MessageService,
-              private orderOperations : OrderRestService) { }
+  constructor(protected confirmationService: ConfirmationService,
+              protected messageService : MessageService,
+              protected orderOperations : OrderRestService) { }
 
   errorMessages : Message[] = [];
   
@@ -44,7 +51,7 @@ export class TableMenuContextService {
     }
     this.showConfirmDialog(this.RELEASE_TITLE, 
                            this.RELEASE_ROUTE + row.loadUsr2 + this.QM, 
-                           () => this.orderOperations.release(row));
+                           () => this.orderOperations.release({loadUsr2: row.loadUsr2, externalLoadId: row.externalloadid }));
   }
 
 
@@ -63,7 +70,7 @@ export class TableMenuContextService {
     } 
     this.showConfirmDialog( this.ALLOCATE_TITLE, 
                             this.ALLOCATE_ROUTE + row.loadUsr2 + this.QM, 
-                            () => this.orderOperations.allocate(row));
+                            () => this.orderOperations.allocate({loadUsr2: row.loadUsr2, externalLoadId: row.externalloadid }));
   }
 
 
@@ -79,7 +86,7 @@ export class TableMenuContextService {
     } 
     this.showConfirmDialog(this.UN_ALLOCATE_TITLE, 
                            this.UN_ALLOCATE_ROUTE + row.loadUsr2 + this.QM, 
-                           () => this.orderOperations.unallocate(row));
+                           () => this.orderOperations.unallocate({loadUsr2: row.loadUsr2, externalLoadId: row.externalloadid }));
   }
 
 
@@ -93,7 +100,7 @@ export class TableMenuContextService {
     }
     this.showConfirmDialog(this.CLOSE_TITLE, 
                            this.CLOSE_ROUTE + row.loadUsr2 + this.QM, 
-                           () => this.orderOperations.close(row));
+                           () => this.orderOperations.close(ControllerURL.CLOSE_ORDER_URL,{loadUsr2: row.loadUsr2, externalLoadId: row.externalloadid }));
   }
 
 
@@ -106,7 +113,7 @@ export class TableMenuContextService {
     }
     this.showConfirmDialog(this.SHIP_TITLE, 
                            this.SHIP_ROUTE + row.loadUsr2 + this.QM, 
-                           () => this.orderOperations.ship(row));
+                           () => this.orderOperations.ship({loadUsr2: row.loadUsr2, externalLoadId: row.externalloadid }));
   }
 
 
@@ -127,7 +134,7 @@ export class TableMenuContextService {
   }
 
 
-  private orderCheckingRoutine(route: string, closed: number, picked: number): void{
+  protected orderCheckingRoutine(route: string, closed: number, picked: number): void {
     this.checkIfRouteIsClosed(route, closed);
     this.checkIfOperationPermitted(picked);
   }
@@ -137,7 +144,7 @@ export class TableMenuContextService {
    * @param row 
    */
   checkIfRouteIsClosed (routeId: string, routeClosed : number){
-  
+    console.log(routeClosed)
     if ( routeClosed == 1){
       this.errorMessages.push({
         life: 5000, 

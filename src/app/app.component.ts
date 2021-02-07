@@ -7,6 +7,7 @@ import { ControllerURL } from 'src/environments/controllers';
 import { NavigationURL } from 'src/environments/navigation';
 import { RestService } from './rest-service.service';
 import { PrimeNGConfig } from 'primeng/api';
+import { AuthService, IUserContext } from './login/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -24,16 +25,17 @@ export class AppComponent implements OnInit{
 
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
 
-  
+  planRouteURL  =  NavigationURL.PLAN_ROUTE.url;
 
   constructor(private service : RestService, 
               private messageService : MessageService,
               private route:  Router,
-              private config: PrimeNGConfig)
+              private config: PrimeNGConfig,
+              private authenticationService: AuthService)
               {
 
    this.service.getWithError(ControllerURL.VERSION_URL).subscribe(response =>{
-    console.log("Beck-end version: " + response['version']);
+      console.log("Beck-end version: " + response['version']);
    }, error => {
     this.uiBlocked = true;
     messageService.add({life: 20000, closable:false, severity: 'warn', summary: 'Ошибка запроса данных', detail: " Ошибка сервера приложения\n сервер не отвечает\n" +error.message })
@@ -69,7 +71,7 @@ export class AppComponent implements OnInit{
   }
 
   gotoRoutePlan(){
-    this.route.navigateByUrl(NavigationURL.HOME.url)
+    this.route.navigateByUrl(this.planRouteURL)
   }
 
 
@@ -80,4 +82,23 @@ export class AppComponent implements OnInit{
   goForward(){
     history.forward();
   }
+
+
+  logOut(): void{
+
+    this.authenticationService.logout().subscribe(response => {
+      this.route.navigate(['/']);
+    });
+  }
+
+ 
+  isLoggedIn(): boolean{
+    return this.authenticationService.isUserLoggedIn();
+  }
+
+  getUserContext(): IUserContext{
+    return this.authenticationService.userObject;
+  }
+
+
 }
