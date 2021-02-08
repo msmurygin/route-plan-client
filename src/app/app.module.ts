@@ -67,6 +67,7 @@ import {CalendarModule} from 'primeng/calendar';
 import {InplaceModule} from 'primeng/inplace';
 import { httpInterceptorProviders } from './http-interceptor.service';
 import { AuthGuardService } from './auth-guard.service';
+import { AuthService } from './login/auth.service';
 @NgModule({
   declarations: [
     AppComponent,

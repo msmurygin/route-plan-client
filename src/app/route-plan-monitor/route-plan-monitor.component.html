@@ -187,7 +187,7 @@
                     {{item.loadUsr2}}
               </a>  
           </td>
-          <td [class]="getStyleByShift(item)" style="overflow: hidden;">{{item.route}}</td>
+          <td [class]="getStyleByShift(item)">{{item.route}}</td>
           <td [class]="getStyleByShift(item)">{{item.itemsInRoute}} </td>
           <td [class]="getStyleByShift(item)">{{item.leftToPick}} </td>
           <td [class]="getStyleByShift(item)">{{item.leftToControl}} </td>
@@ -228,7 +228,7 @@
           <td [class]="getStyleByShift(item)">{{item.shippedItems}} </td>
           <td [class]="getStyleByShift(item)">{{item.status}} </td>
 
-          <td class="edit-cursor overflow" [class]="getStyleByShift(item)"  pEditableColumn [pEditableColumn]="rowData" [pEditableColumnField]="'susr2'" [pEditableColumnRowIndex]="rowIndex">
+          <td class="edit-cursor" [class]="getStyleByShift(item)"  pEditableColumn [pEditableColumn]="rowData" [pEditableColumnField]="'susr2'" [pEditableColumnRowIndex]="rowIndex">
             <p-cellEditor *ngIf="rowData.susr2 != 'Разное'  && isAdmin()">
                 <ng-template pTemplate="input">
                     <input matInput [(ngModel)]="rowData.susr2">

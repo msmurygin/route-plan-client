@@ -7,7 +7,9 @@ import { catchError, map, tap } from 'rxjs/operators'
 import { RequestBody } from './dto/plan-route-request-body';
 import { CookieService } from 'ngx-cookie-service';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+  })
 export class RestService {
     
     httpOptions = {};

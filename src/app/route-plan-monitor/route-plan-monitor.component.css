@@ -7,6 +7,7 @@
     font-weight: 500;
     font-size: 0.8em!important;
     text-align: left;
+    word-wrap: break-word;
 }
 
 :host ::ng-deep .p-datatable .p-datatable-tbody > tr  {
@@ -69,7 +70,6 @@
 
 
 .td_detail {
-  
     padding-right: 2px !important;
     /* font-size : 0.65em!important;
     font-weight: 500; */
@@ -77,9 +77,7 @@
     color: #6c757d!important;
     background-color: #E3F2FD; /*rgba(211, 211, 211, 0.109)*/
 }
-.overflow {
-    overflow: hidden;
-}
+
 .td_detail_buttons {
     flex: auto;
     padding: 0!important;
@@ -119,14 +117,20 @@
 
 
 .selected_row {
-    overflow: hidden;
     padding-right: 2px !important;
     /* font-size : 1em!important; */
     text-align: left!important;
     color: #000000!important;
     background-color: rgba(211, 211, 211, 0.534)
 }
+:host ::ng-deep .p-highlight-contextmenu {
 
+    padding-right: 2px !important;
+    /* font-size : 1em!important; */
+    text-align: left!important;
+    color: #000000!important;
+    background-color: rgba(211, 211, 211, 0.534)
+}
 
 
 :host ::ng-deep .p-button {
