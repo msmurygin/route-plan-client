@@ -9,7 +9,10 @@
 
 <p-contextMenu #tableMenu [model]="menuItems"></p-contextMenu>
 
-<p-table  class="p-datatable-sm" 
+<p-table 
+          [resizableColumns]="true"
+          columnResizeMode="expand"
+          class="p-datatable-sm" 
           [value]="orderDataSource" 
           [paginator]="true" 
           [rows]="10" 
@@ -161,7 +164,7 @@
             <td class="td_detail">
                 
             </td>
-            <td class="td_detail padding_right">{{detail.orderKey}}</td>
+            <td class="td_detail">{{detail.orderKey}}</td>
             <td class="td_detail">
                 <a  [routerLink]="[NAVIGATION.ORDER_DETAIL.url]" 
                     [queryParams]="{ orderKey: detail.orderKey, externalOrderKey2: detail.externalOrderKey2}"> 
