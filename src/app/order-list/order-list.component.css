@@ -73,7 +73,7 @@
 }
 .selected_row {
   
-  text-align: left!important;
+  text-align: center!important;
   color: #000000!important;
   background-color: rgba(146, 146, 146, 0.534)
 }
