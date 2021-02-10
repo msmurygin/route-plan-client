@@ -16,36 +16,44 @@ export interface IUserContext {
   providedIn: 'root'
 })
 export class AuthService {
-  // BASE_PATH: 'http://localhost:8080'
   USER_NAME_SESSION_ATTRIBUTE_NAME = 'authenticatedUser';
+  TOKEN_SESSION_ATTRIBUTE_NAME = 'token';
+  USER_OBJECT_SESSION_ATTRIBUTE = "usrObject"
 
   public username: string;
   public password: string;
   public userObject : IUserContext ;
+  public auth   : string;
 
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { 
+    this.username = sessionStorage.getItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME);
+    this.auth = sessionStorage.getItem(this.TOKEN_SESSION_ATTRIBUTE_NAME);
+    this.userObject = JSON.parse(sessionStorage.getItem(this.USER_OBJECT_SESSION_ATTRIBUTE) ?  sessionStorage.getItem(this.USER_OBJECT_SESSION_ATTRIBUTE) : "{}" );
+  }
 
   authenticationService(username: string, password: string): Observable<any> {
     return this.http.get(ControllerURL.LOGIN,
       { headers: { authorization: this.createBasicAuthToken(username, password) } }).pipe( map ((res) => {
-      this.username = username;
-      this.password = password;
       this.registerSuccessfulLogin(username, password);
       this.userObject = {
         userName : res['userName'],
         fullyQualifiedName : res['fullyQualifiedName'],
         roles : res['roles']
-      } 
+      }
+      sessionStorage.setItem(this.USER_OBJECT_SESSION_ATTRIBUTE, JSON.stringify(this.userObject));
     }));
   }
 
   createBasicAuthToken(username: string, password: string): string  {
-    return 'Basic ' + window.btoa(username + ':' + password);
+    let token = 'Basic ' + window.btoa(username + ':' + password);
+    this.auth = token;
+    sessionStorage.setItem(this.TOKEN_SESSION_ATTRIBUTE_NAME, token);
+    return token;
   }
 
   registerSuccessfulLogin(username, password): void {
     sessionStorage.setItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME, username);
+   
   }
   logout(): Observable<any>  {
     return this.http.get(ControllerURL.LOGOUT).pipe( map ((res) => {
@@ -54,8 +62,10 @@ export class AuthService {
   }
   logoutSuccessFully(): void {
     sessionStorage.removeItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME);
-    this.username = null;
-    this.password = null;
+    sessionStorage.removeItem(this.TOKEN_SESSION_ATTRIBUTE_NAME);
+    sessionStorage.removeItem(this.USER_OBJECT_SESSION_ATTRIBUTE);
+    this.userObject = null;
+    this.auth   = null;
   }
 
   isUserLoggedIn(): boolean {
@@ -64,11 +74,7 @@ export class AuthService {
     return true;
   }
 
-  getLoggedInUserName(): any {
-    const user = sessionStorage.getItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME);
-    if (user === null) { return ''; }
-    return user;
-  }
+
 
   isAdmin(): boolean{
     let admin = this.userObject.roles.filter(item => item == "ROLE_ADMIN");

@@ -97,7 +97,7 @@ export class AppComponent implements OnInit{
   }
 
   getUserContext(): IUserContext{
-    return this.authenticationService.userObject;
+    return this.authenticationService.userObject 
   }
 
 

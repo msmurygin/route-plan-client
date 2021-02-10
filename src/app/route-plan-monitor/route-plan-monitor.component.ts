@@ -231,6 +231,9 @@ export class RoutePlanMonitorComponent implements OnInit  {
     this.dataSource = HEADER_DATA;
     // Format dates 
     this.detailDataSource.forEach(item =>{
+      if (item.deliveryDate){
+        item.deliveryDate = new Date(item.deliveryDate)
+      }
       if (item.actualArrivalDate) {
         item.actualArrivalDate = new Date(item.actualArrivalDate)
       } 

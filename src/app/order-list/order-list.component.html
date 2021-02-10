@@ -9,8 +9,7 @@
 
 <p-contextMenu #tableMenu [model]="menuItems"></p-contextMenu>
 
-<p-table style="height: 100%"
-          [resizableColumns]="true"
+<p-table
           columnResizeMode="expand"
           class="p-datatable-sm" 
           [value]="orderDataSource" 
@@ -37,8 +36,8 @@
       <tr>
         <th class="th_header">Ост.</th>
         <th class="th_header">Клиент</th>
-        <th class="th_header">Заказ</th>
-        <th class="th_header">1C Торг</th>
+        <th class="th_header" width="100px">Заказ</th>
+        <th class="th_header" width="100px">1C Торг</th>
         <th class="th_header">Заказов</th>
         <th class="th_header">Док-к<br>ВСЕГО</th>
         <th class="th_header">Док-к осталось собрать</th>
@@ -49,12 +48,12 @@
         <th class="th_header">Загру&shy;жено<br>%</th>
         <th class="th_header">Проблемы</th>
         <th class="th_header">Расчетное</th>
-        <th class="th_header">Линии</th>
-        <th class="th_header">ДОК</th>
+        <th class="th_header" width="100px">Линии</th>
+        <th class="th_header" width="100px">ДОК</th>
         <th class="th_header">Объем,<br>куб.м.</th>
         <th class="th_header">Вес,<br>тонн</th>
         <th class="th_header">Кол&shy;во отгру&shy;же&shy;нных<br>мест</th>
-        <th class="th_header">Статус</th>
+        <th class="th_header" width="100px">Статус</th>
         <th class="th_header">Кла&shy;до&shy;вщик<br>экс&shy;пе&shy;ди&shy;ции</th> 
         <th class="th_header" *ngIf="showDates">Создание рейса</th>
         <th class="th_header" *ngIf="showDates">Го&shy;тов&shy;ность рейса</th>
@@ -165,6 +164,7 @@
                 
             </td>
             <td class="td_detail">{{detail.orderKey}}</td>
+            
             <td class="td_detail">
                 <a  [routerLink]="[NAVIGATION.ORDER_DETAIL.url]" 
                     [queryParams]="{ orderKey: detail.orderKey, externalOrderKey2: detail.externalOrderKey2}"> 
