@@ -2,7 +2,7 @@
 
 :host ::ng-deep .p-datatable {
   font-weight: 500;
-  font-size: 0.7em!important;
+  font-size: 1em!important;
   text-align: center;
   word-wrap: break-word;
 }
