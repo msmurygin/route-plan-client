@@ -372,7 +372,7 @@ export class OrderListComponent implements OnInit {
         if (response){
           this.messageService.add({life: 10000, closable:true, severity: 'success', summary: 'Операция прошла успешно', detail: "Данные обновлены" });
           this.cancel();
-          this.ngOnInit();
+         
         }
       })
     }
@@ -383,6 +383,7 @@ export class OrderListComponent implements OnInit {
       while (this.modifiedRows.length) {
         this.modifiedRows.pop();
       }
+      this.ngOnInit();
     }
   }
 

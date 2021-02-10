@@ -95,3 +95,6 @@
   outline-width: 5px;
   outline-color: #565a6d!important;
 }
+.p-d-flex {
+  display: flex;
+}

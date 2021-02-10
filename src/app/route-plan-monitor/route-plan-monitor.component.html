@@ -137,9 +137,9 @@
           [(contextMenuSelection)]="selectedDetail" [contextMenu]="cm">
           <ng-template pTemplate="caption">
             <div class="p-d-flex">
-                <button *ngIf="modifiedRows.length > 0" pButton pRipple type="button" icon="pi pi-check" class="p-button-rounded p-button-outlined"  (click)="save()"></button>
+                <button *ngIf="modifiedRows.length > 0" pButton class="p-button-rounded" label="Сохранить" (click)="save()"></button>
                 &nbsp;
-                <button *ngIf="modifiedRows.length > 0" pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger p-button-outlined" (click)="cancel()"></button>
+                <button *ngIf="modifiedRows.length > 0" pButton label="Отмена"  class="p-button-rounded p-button-danger" (click)="cancel()"></button>
             </div>
         </ng-template>
   <ng-template pTemplate="header">

@@ -397,7 +397,6 @@ export class RoutePlanMonitorComponent implements OnInit  {
       }
       this.service.put(ControllerURL.ROUTE_PLAN_TABLE_DATA_URL, body).subscribe(response =>{
         this.messageService.add({life: 10000, closable:true, severity: 'success', summary: 'Операция прошла успешно', detail: "Данные обновлены" });
-        this.searchClicked();
         this.cancel();
       })
     }
@@ -408,7 +407,9 @@ export class RoutePlanMonitorComponent implements OnInit  {
       while (this.modifiedRows.length) {
         this.modifiedRows.pop();
       }
+      this.searchClicked();
     }
+    
   }
 
 
