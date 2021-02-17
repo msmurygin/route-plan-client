@@ -54,6 +54,9 @@ export interface ILocations{
 export class RoutePlanMonitorComponent implements OnInit  {
 
   /****  Фильтры ***/
+  rows = 10;
+  first = 0;
+  pageEvent : {}; // Хранитель состояния пагинации
   startDate = new FormControl();
   endDate = new FormControl();
   destinationConrol = new FormControl();
@@ -132,6 +135,11 @@ export class RoutePlanMonitorComponent implements OnInit  {
 
 
     /**** Загрузка фильтров из хранилища сессий */
+    this.pageEvent = JSON.parse(sessionStorage.getItem("route_monitor_items_per_page-filter")) || {first: 0, rows: 10};
+    if (this.pageEvent){
+      this.rows = this.pageEvent['rows']
+      this.first = this.pageEvent['first']
+    }
     let _startDate : string = sessionStorage.getItem("startDate-filter");
     let _endDate : string   = sessionStorage.getItem("endDate-filter");
     let _byShift : string   = sessionStorage.getItem("byshift-filter");
@@ -144,6 +152,10 @@ export class RoutePlanMonitorComponent implements OnInit  {
    
   }
 
+  onPage(event){
+    this.pageEvent = event;
+    sessionStorage.setItem("route_monitor_items_per_page-filter", JSON.stringify(event))
+  }
   
   ngOnInit(){
     let   replMenuItems        : MenuItem[] = [

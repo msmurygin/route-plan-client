@@ -26,20 +26,21 @@ export class ProblemListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let route : string;
+   
     this.route.queryParams.subscribe(params =>{
       if (params){
         this.loading = true;
+
         let externalLoadId =  params['externalloadid'];
         let loadUsr2       =  params['loadusr2'];
-        route              =  params['loadusr2'];
-        let req  :  ProblemListRequestBody =  this.createRequest(externalLoadId, loadUsr2);
+        let orderKey       =  params['orderKey'];
+        let req  :  ProblemListRequestBody =  this.createRequest(externalLoadId, loadUsr2, orderKey);
         this.doPost(req);
         this.loading = false;
       }
     });
 
-    this.breadScrumsMenuItem = [{label:'Список проблем по рейсу ' + route }];
+    //this.breadScrumsMenuItem = [{label:'Список проблем по рейсу ' + route }];
   }
 
   doPost(req :ProblemListRequestBody){
@@ -51,8 +52,16 @@ export class ProblemListComponent implements OnInit {
     });
   }
 
-  createRequest(externalLoadId : string, loadUsr2 : string): ProblemListRequestBody {
+  createRequest(externalLoadId : string, loadUsr2 : string, orderKey: string): ProblemListRequestBody {
     let requestBody : ProblemListRequestBody;
+  
+    if (orderKey){
+      requestBody = {
+        orderKey : orderKey,
+      }
+      return requestBody;
+    }
+
     if (externalLoadId === loadUsr2){
       requestBody = {
         orderKey : externalLoadId,
@@ -62,6 +71,7 @@ export class ProblemListComponent implements OnInit {
         externalLoadId : externalLoadId,
       }
     }
+  
     return requestBody;
   }
 

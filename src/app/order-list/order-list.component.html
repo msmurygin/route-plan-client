@@ -181,7 +181,8 @@
             <td class="td_detail">{{ round(detail.packedQty) }}</td>
             <td class="td_detail">{{detail.loadedQty}}</td>
             <td [class]="getRowColor(detail)" >
-                <a *ngIf="detail.showReason === 1"class="exclamation-marks" >!!!</a>
+                <a *ngIf="detail.showReason === 1" class="exclamation-marks" [routerLink]="[NAVIGATION.PROBLEMS.url]"  
+                [queryParams]="{ orderKey: detail.orderKey}" >!!!</a>
                 <div *ngIf="detail.showReason != 1"class="p-text-center">Нет</div>
             </td>
             <td class="td_detail">{{round(detail.calcQtyLane) }}</td>

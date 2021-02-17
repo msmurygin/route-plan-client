@@ -23,7 +23,6 @@
 
 :host ::ng-deep  .reason_gray{
     background-color: gainsboro!important;
-    padding: 0!important;
     word-wrap: break-word;
     font-size : 0.7em!important;
     text-align: left!important;
