@@ -1,7 +1,7 @@
-<p-breadcrumb [model]="breadScrumsMenuItem" [home]="home"></p-breadcrumb>
+<div class="page_title"> Список проблем по заказу {{ _orderKey }}</div>
 <p-table  [resizableColumns]="true" styleClass="p-datatable-sm"
 [value]="problemListDataSource" 
-[paginator]="true" [rows]="50" [showCurrentPageReport]="true" 
+[paginator]="false" [rows]="50" [showCurrentPageReport]="true" 
 currentPageReportTemplate="Показанно с {first} по {last} из {totalRecords} записей" [rowsPerPageOptions]="[5,10,25,50,100]"
 [loading]="loading" dataKey="rowNumber">
     <ng-template pTemplate="header">

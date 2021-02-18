@@ -182,7 +182,7 @@
   <ng-template pTemplate="body" let-item let-rowData let-rowIndex="rowIndex">
       <tr [pContextMenuRow]="item"  [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" >
           <td [class]="getStyleByShift(item)" *ngIf="false">{{item.rowId}}</td>
-          <td [class]="getStyleByShift(item)">{{item.deliveryDate | date:'dd.MM.yyyy HH:mm'}}</td>
+          <td [class]="getStyleByShift(item)">{{item.deliveryDate | date:'dd.MM HH:mm'}}</td>
           <td [class]="getStyleByShift(item)">
               <a [routerLink]="[NAVIGATION.ORDER_LIST.url]" 
                  [queryParams]="{ externalloadid: item.externalloadid, loadusr2: item.loadUsr2}">
@@ -197,11 +197,9 @@
           <td [class]="getStyleByShift(item)">{{item.controlled}} </td>
           <td [class]="getStyleByShift(item)">{{item.packed}} </td>
           <td [class]="getStyleByShift(item)">{{item.loaded}} </td>
-          <td [class]="getRowColor(item)">
-            <a *ngIf="item.showReason === 1"
-                [routerLink]="[NAVIGATION.PROBLEMS.url]"  
-                [queryParams]="{ externalloadid: item.externalloadid, loadusr2: item.loadUsr2}" >!!!</a>
-            <div *ngIf="item.showReason != 1"class="p-text-center">Нет</div>
+          <td [class]="getRowColor(item)" (click)="onReasonClick(item)">
+            <div *ngIf="item.showReason === 1" class="p-text-center">!!!</div>
+            <div *ngIf="item.showReason != 1"  class="p-text-center">Нет</div>
           </td>
           <td class="edit-cursor" [class]="getStyleByShift(item)"  pEditableColumn [pEditableColumn]="rowData" [pEditableColumnField]="'packingLocation'" [pEditableColumnRowIndex]="rowIndex">
               <p-cellEditor *ngIf="rowData.packingLocation != 'Разное'  && isAdmin()">

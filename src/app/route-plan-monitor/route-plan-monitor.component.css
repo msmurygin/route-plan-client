@@ -12,8 +12,11 @@
 
 :host ::ng-deep .p-datatable .p-datatable-tbody > tr  {
     border-top: 2px solid #6d6d6d6e;
+   
+    
 }
 :host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+    border-left: 2px solid #6d6d6d6e;
     padding: 2px 2px 2px 10px;
     word-wrap: break-word;
 }

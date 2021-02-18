@@ -5,6 +5,7 @@
           <th class="th_header_small">Товар</th>
           <th class="th_header_small">Описание</th>
           <th class="th_header_small">Упаковка</th>
+          <th class="th_header_small">Требуется для заказа</th>
       </tr>
   </ng-template>
   <ng-template pTemplate="body" let-item>
@@ -12,12 +13,14 @@
         <td class="td_detail">{{item.sku}}</td>
         <td class="td_detail">{{item.descr}}</td>
         <td class="td_detail">{{item.packKey}} </td>
+        <td class="td_detail">{{item.openQty}} </td>
     </tr>
   </ng-template>
 </p-table>
+<br>
 <p-table  class="p-datatable-sm" 
           [value]="getDetailDataSource()" 
-          [paginator]="true" [rows]="10" [showCurrentPageReport]="true" 
+          [paginator]="false" [rows]="10" [showCurrentPageReport]="true" 
           currentPageReportTemplate="Показанно с {first} по {last} из {totalRecords} записей" 
           [rowsPerPageOptions]="[5,10,25,50,100]"
           [loading]="loading" 
@@ -51,6 +54,14 @@
   <ng-template pTemplate="footer" >
     <tr>
         <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="td_footer_left">Итого:</td>
+        <td class="td_footer">{{ detailDatatSourceTable ?  detailDatatSourceTable.qtyTotal : 0 }}</td>
+        <td class="td_footer">{{ detailDatatSourceTable ?  detailDatatSourceTable.qtyAllocatedTotal : 0 }}</td>
+        <td class="td_footer">{{ detailDatatSourceTable ?  detailDatatSourceTable.qtyPickedTotal : 0 }}</td>
+        <td class="td_footer">{{ detailDatatSourceTable ?  detailDatatSourceTable.qtyAvailable : 0 }}</td>
     </tr>
-</ng-template> -->
-</p-table>-->
+</ng-template>
+</p-table>

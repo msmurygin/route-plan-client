@@ -13,11 +13,12 @@ import { TableRowColorUtils } from '../table-row-color-utils';
 })
 export class ProblemListComponent implements OnInit {
   
-  breadScrumsMenuItem : MenuItem[];
+ 
   home : any;
   loading : boolean = false;
   problemListDataSource : any;
 
+  _orderKey : string = "9323";
   
   constructor(private route   : ActivatedRoute,
     private service : RestService,
@@ -26,14 +27,18 @@ export class ProblemListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   
-    this.route.queryParams.subscribe(params =>{
+    
+    this.route.params.subscribe(params =>{
       if (params){
         this.loading = true;
 
         let externalLoadId =  params['externalloadid'];
         let loadUsr2       =  params['loadusr2'];
         let orderKey       =  params['orderKey'];
+
+        this._orderKey = params['orderKey'] || params['externalloadid'];
+       
+       
         let req  :  ProblemListRequestBody =  this.createRequest(externalLoadId, loadUsr2, orderKey);
         this.doPost(req);
         this.loading = false;
@@ -44,10 +49,7 @@ export class ProblemListComponent implements OnInit {
   }
 
   doPost(req :ProblemListRequestBody){
-    console.log(req)
     this.service.post<ProblemListRequestBody>(ControllerURL.PROBLEM_LIST_URL, req).subscribe(response =>{
-     
-      console.log(response['problems'])
       this.problemListDataSource = response['problems']
     });
   }

@@ -325,7 +325,7 @@ export class RoutePlanMonitorComponent implements OnInit  {
     return value ? value.join(",") : '';
   }
   getRowColor (item : PlanRouteDetailTable) {
-    return this.colorUtil.getStyleByReasonCode(item);
+    return this.colorUtil.getStyleByReasonCode(item)+ " " + this.getCursorForReasonCell(item);
   }
 
   getStyleByShift(item : PlanRouteDetailTable ){
@@ -504,5 +504,17 @@ export class RoutePlanMonitorComponent implements OnInit  {
 
   isAdmin(): boolean {
     return this.auth.isAdmin();
+  }
+
+  getCursorForReasonCell(item : PlanRouteDetailTable) : string  {
+    return item.showReason === 1 ? "edit-cursor" : "";
+  }
+
+  onReasonClick(item : PlanRouteDetailTable) : void {
+    console.log(item)
+
+    if (item.showReason === 1){
+      this.router.navigate([this.NAVIGATION.PROBLEMS.url, { externalloadid: item.externalloadid, loadusr2: item.loadUsr2}])
+    }
   }
 }

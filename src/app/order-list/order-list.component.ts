@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api/menuitem';
 import { ControllerURL } from 'src/environments/controllers';
-import { DateFormatPipe } from '../date-format.pipe';
 import { OrderListTable, OrderLineTable } from '../dto/plan-route-detail-table';
 import { RestService } from '../rest-service.service';
 import { TableRowColorUtils } from '../table-row-color-utils';
@@ -10,8 +9,6 @@ import { MessageService, SelectItem } from 'primeng/api';
 import { NavigationURL } from 'src/environments/navigation';
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { ILocations } from '../route-plan-monitor/route-plan-monitor.component';
-import { HttpErrorResponse } from '@angular/common/http';
-import { RoutePlanContextMenuService } from '../route-plan-monitor/table-menu-context.service';
 import { OrderListContextMenuService } from './order-list-menu.service';
 import { AuthService } from '../login/auth.service';
 
@@ -78,6 +75,7 @@ export class OrderListComponent implements OnInit {
               private messageService : MessageService,
               private breadcrumb     : BreadcrumbComponent,
               private menuAction     : OrderListContextMenuService,
+              private router         : Router,
               private colorUtil      : TableRowColorUtils,
               private auth : AuthService ) { 
     this.home = {icon: 'pi pi-home', routerLink: '/'};
@@ -244,7 +242,7 @@ export class OrderListComponent implements OnInit {
    * @param item - объект данных строки таблицы
    */
   getRowColor (item : any) {
-    return this.colorUtil.getStyleByReasonCode(item);
+    return this.colorUtil.getStyleByReasonCode(item) + " " + this.getCursorForReasonCell(item);
   }
 
 
@@ -440,6 +438,14 @@ export class OrderListComponent implements OnInit {
   isAdmin(): boolean{
     return this.auth.isAdmin();
   }
+  getCursorForReasonCell(item : OrderLineTable) : string  {
+    return item.showReason === 1 ? "edit-cursor" : "";
+  }
 
+  onReasonClick(item : OrderLineTable) : void {
+    if (item.showReason === 1){
+      this.router.navigate([this.NAVIGATION.PROBLEMS.url, {  orderKey: item.orderKey}])
+    }
+  }
 }
 

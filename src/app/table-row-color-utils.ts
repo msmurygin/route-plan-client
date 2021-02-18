@@ -6,7 +6,6 @@ export class TableRowColorUtils {
     
 
     getRowColorWithoutShiftsColor(item : any): string {
-        console.log(item.reasonCode)
         if (item.reasonCode == 2) return "reason_red";
         if (item.reasonCode == 3) return "reason_purple";
         if (item.reasonCode == 1) return "reason_gray";

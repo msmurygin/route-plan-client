@@ -2,7 +2,7 @@
 <div style="text-align: center; font-size: 1.2em; font-weight: bold;">{{ title }}</div>
 <p-table  [resizableColumns]="true" styleClass="p-datatable-sm"
 [value]="orderDetailDataSource" 
-[paginator]="true" [rows]="10" [showCurrentPageReport]="true" 
+[paginator]="false" [rows]="10" [showCurrentPageReport]="true" 
 currentPageReportTemplate="Показанно с {first} по {last} из {totalRecords} записей" [rowsPerPageOptions]="[5,10,25,50,100]"
 [loading]="loading" dataKey="orderLineNumber ">
     <ng-template pTemplate="header">
@@ -10,11 +10,11 @@ currentPageReportTemplate="Показанно с {first} по {last} из {total
             <th  class="th_header_small" width="3%">№</th>
             <th  class="th_header_small" width="7%">Код товара</th>
             <th  class="th_header_small">Наименование товара</th>
-            <th  class="th_header_small" width="7%">Заказано</th>
-            <th  class="th_header_small"width="7%">Зарезервировано</th>
-            <th  class="th_header_small"width="7%">Отобрано</th>
-            <th  class="th_header_small"width="7%">Отгружено</th>
-            <th  class="th_header_small"width="7%">Не зараезервировано</th>
+            <th  pSortableColumn="openQty" class="th_header_small" width="7%">Заказано <p-sortIcon field="openQty"></p-sortIcon></th>
+            <th  pSortableColumn="qtyAllocated" class="th_header_small"width="10%">Зарезервировано <p-sortIcon field="qtyAllocated"></p-sortIcon></th>
+            <th  pSortableColumn="qtyPicked" class="th_header_small"width="7%">Отобрано <p-sortIcon field="qtyPicked"></p-sortIcon></th>
+            <th  pSortableColumn="shippedQty" class="th_header_small"width="7%">Отгружено <p-sortIcon field="shippedQty"></p-sortIcon></th>
+            <th  pSortableColumn="qtyLeft" class="th_header_small"width="10%">Не зараезервировано <p-sortIcon field="qtyLeft"></p-sortIcon></th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item>
@@ -22,7 +22,7 @@ currentPageReportTemplate="Показанно с {first} по {last} из {total
             <td class="td_detail">{{item.orderLineNumber}}</td>
             <td class="td_detail">
             <a [routerLink]="[navi.SKU_BALANCE.url]" 
-                [queryParams]="{ sku: item.sku, descr: item.descr, pack: item.packKey }">
+                [queryParams]="{ sku: item.sku, descr: item.descr, pack: item.packKey, openQty: item.openQty }">
                    {{item.sku}}
              </a>  
             </td>

@@ -107,6 +107,7 @@ export interface SkuBallanceHeader {
   sku: string;
   descr: string;
   packKey : string;
+  openQty: string;
 }
 
 export interface SkuBallanceDetail {

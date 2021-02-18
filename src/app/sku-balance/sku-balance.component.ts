@@ -20,15 +20,18 @@ export class SkuBalanceComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params =>{
       if (params){
+        console.log(params)
         let sku   =  params['sku'];
         let descr =  params['descr'];
         let pack  =  params['pack'];
+        let openQty = params['openQty']
         this.processQueryParamsAndLoadTableData(sku);
         console.log("SKU="+sku+", descr="+ descr+", pack="+ pack)
         this.headerDatatSourceTable = [...this.headerDatatSourceTable, {
           sku: sku, 
           descr: descr, 
-          packKey: pack
+          packKey: pack,
+          openQty : openQty
         }]
       }
     });

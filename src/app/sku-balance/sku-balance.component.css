@@ -3,9 +3,18 @@ table {
     border-collapse: collapse;
 }
 
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+    border-left: 2px solid #6d6d6d6e;
+    border-top: 2px solid #6d6d6d6e;
+    font-weight: 400;
+    font-size: 1em!important;
+    color: black;
+}
+
+
 .th_header {
     padding: 0!important;
-    font-size: 0.7em!important;
+    font-size: 1em!important;
     text-align: center!important;
     background-color: rgba(211, 211, 211, 0.801)!important;
     /*border-bottom: 1px solid #3f51b5!important; */
@@ -13,7 +22,7 @@ table {
 
 .th_header_small {
     padding: 0!important;
-    font-size: 0.7em!important;
+    font-size: 1em!important;
     text-align: center!important;
     background-color: rgba(211, 211, 211, 0.486)!important;
     border-bottom: 1px solid #3f51b5!important;
@@ -31,5 +40,10 @@ table {
 }
 
 
+.td_footer{
+    text-align: center!important;
+}
 
-
+.td_footer_left {
+    text-align: right!important;
+}

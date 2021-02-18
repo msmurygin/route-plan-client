@@ -13,7 +13,7 @@
           columnResizeMode="expand"
           class="p-datatable-sm" 
           [value]="orderDataSource" 
-          [paginator]="true" 
+          [paginator]="false" 
           [rows]="10" 
           [showCurrentPageReport]="true" 
           [loading]="loading" 
@@ -180,11 +180,19 @@
             <td class="td_detail">{{detail.controlledQty}}</td>
             <td class="td_detail">{{ round(detail.packedQty) }}</td>
             <td class="td_detail">{{detail.loadedQty}}</td>
-            <td [class]="getRowColor(detail)" >
+            
+            <td [class]="getRowColor(detail)" (click)="onReasonClick(detail)">
+                <div *ngIf="detail.showReason === 1" class="exclamation-marks">!!!</div>
+                <div *ngIf="detail.showReason != 1"  class="p-text-center">Нет</div>
+              </td>
+            
+            <!-- <td [class]="getRowColor(detail)" >
                 <a *ngIf="detail.showReason === 1" class="exclamation-marks" [routerLink]="[NAVIGATION.PROBLEMS.url]"  
                 [queryParams]="{ orderKey: detail.orderKey}" >!!!</a>
                 <div *ngIf="detail.showReason != 1"class="p-text-center">Нет</div>
-            </td>
+            </td> -->
+
+
             <td class="td_detail">{{round(detail.calcQtyLane) }}</td>
            
             <td class="td_detail edit-cursor"  pEditableColumn [pEditableColumn]="detail" [pEditableColumnField]="'packingLocation'" [pEditableColumnRowIndex]="rowIndex">
