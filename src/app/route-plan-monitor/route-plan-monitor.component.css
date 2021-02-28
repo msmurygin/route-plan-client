@@ -7,35 +7,32 @@
     font-weight: 500;
     font-size: 0.8em!important;
     text-align: left;
-    word-wrap: break-word;
+    overflow: hidden;
+    word-wrap: none;
 }
 
 :host ::ng-deep .p-datatable .p-datatable-tbody > tr  {
-    border-top: 2px solid #6d6d6d6e;
-   
-    
+   border-top: 2px solid #6d6d6d6e;
+
+   line-height: 15px!important;
 }
+
+
+
 :host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
     border-left: 2px solid #6d6d6d6e;
-    padding: 2px 2px 2px 10px;
-    word-wrap: break-word;
+    padding: 0!important; 
 }
 
 
 .th_header {
     padding: 0!important;
-    /* font-weight: 400;
-    font-size: 0.65em!important; */
-    /* text-align: center!important; */
     background-color: rgba(211, 211, 211, 0.801)!important;
     /*border-bottom: 1px solid #3f51b5!important; */
 }
 
 .th_header_small {
     padding: 0!important;
-    /* font-weight: 400;
-    font-size: 0.65em!important; */
-    /* text-align: center!important; */
     background-color: rgba(211, 211, 211, 0.486)!important;
     border-bottom: 1px solid #3f51b5!important;
 }
@@ -82,9 +79,6 @@
 
 .td_detail-no-word-wrap {
     overflow: hidden!important;
-    padding: 2px 2px 2px 2px !important;
-    /* font-size : 0.6em!important; */
-    /* text-align: center!important; */
     color: #000000!important;
     background-color: rgba(211, 211, 211, 0.109)
 }
@@ -94,6 +88,12 @@
 }
 .edit-cursor {
     cursor: pointer;
+}
+
+.overflow {
+    overflow: hidden;
+    height: 14px;
+    white-space: nowrap;
 }
 
 /* :host ::ng-deep .p-datatable .p-datatable-tbody > tr:focus{

@@ -87,9 +87,12 @@
   text-align: center!important;
   color: #000000!important;
   background-color: rgba(211, 211, 211, 0.534);
- 
+  border-bottom: 3px solid #000000!important;
+  border-top: 3px solid #000000!important;
 }
-:host ::ng-deep .p-highlight-contextmenu {
+
+
+:host ::ng-deep .p-highlight-contextmenu1 {
   text-align: center!important;
   color: #000000!important;
   background-color: rgba(211, 211, 211, 0.534);
@@ -100,3 +103,14 @@
 .p-d-flex {
   display: flex;
 }
+
+
+:host ::ng-deep .p-button {
+  outline: 0!important; 
+}
+
+:host ::ng-deep .p-button:focus {
+  outline: 0!important; 
+}
+
+*:focus {outline:none !important}

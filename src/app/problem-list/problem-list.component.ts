@@ -36,7 +36,7 @@ export class ProblemListComponent implements OnInit {
         let loadUsr2       =  params['loadusr2'];
         let orderKey       =  params['orderKey'];
 
-        this._orderKey = params['orderKey'] || params['externalloadid'];
+        this._orderKey = params['orderKey'] || params['loadusr2'];
        
        
         let req  :  ProblemListRequestBody =  this.createRequest(externalLoadId, loadUsr2, orderKey);

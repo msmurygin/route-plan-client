@@ -59,7 +59,7 @@ export class OrderListComponent implements OnInit {
   home                : any;
   nsqlValue           : number;
   nsqlDescription     : String ;
-  
+  expanded            : boolean = true;     // row's group expanded ? 
   showDates           : boolean = true;      
   loading             : boolean = false;
 
@@ -390,7 +390,7 @@ export class OrderListComponent implements OnInit {
   selectedRowStyle : any; // Saving row ref
 
   onRowSelect(event: any, template?: any) {
-   
+    console.log(event)
     // check if previous row has been saved
     if (this.selectedRowStyle){
       let elementChildrens = this.selectedRowStyle.children;
@@ -430,7 +430,7 @@ export class OrderListComponent implements OnInit {
         child.classList.add('selected_row')
     }
     //event['originalEvent'].path[1].classList.add("selected_row")
-    event['originalEvent'].path[1].classList.add("td_detail_no_style")
+   // event['originalEvent'].path[1].classList.add("td_detail_no_style")
     
   }
 
