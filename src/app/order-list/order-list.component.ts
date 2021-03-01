@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api/menuitem';
 import { ControllerURL } from 'src/environments/controllers';
@@ -11,6 +11,8 @@ import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { ILocations } from '../route-plan-monitor/route-plan-monitor.component';
 import { OrderListContextMenuService } from './order-list-menu.service';
 import { AuthService } from '../login/auth.service';
+import { MatTable } from '@angular/material/table';
+import { Table } from 'primeng/table';
 
 export interface IBodyRequest{
   orderList : IOrderListUpdateRequestBody[];
@@ -68,7 +70,8 @@ export class OrderListComponent implements OnInit {
   orderDataSource     : OrderListTable[];
   selectedOrderLine   : OrderLineTable;
   rowGroupMetadata    : any;
-  expandedRowKeys     = {}
+  expandedRowKeys     = {};
+  @ViewChild('dataTable') tableObject : Table;
 
   constructor(private route          : ActivatedRoute,
               private service        : RestService,
@@ -404,7 +407,7 @@ export class OrderListComponent implements OnInit {
       this.selectedRowStyle.classList.remove("td_detail_no_style")
     }
     // prev saved style 
-    this.selectedRowStyle = event['originalEvent'].path[1];
+    this.selectedRowStyle = event instanceof MouseEvent ? event['path'][1] :  event['originalEvent'].path[1];
 
 
     let elementChildrens: HTMLCollection = this.selectedRowStyle.children;
@@ -429,9 +432,6 @@ export class OrderListComponent implements OnInit {
         child.classList.remove(this.selectedRowStyleName)
         child.classList.add('selected_row')
     }
-    //event['originalEvent'].path[1].classList.add("selected_row")
-   // event['originalEvent'].path[1].classList.add("td_detail_no_style")
-    
   }
 
 
@@ -446,6 +446,13 @@ export class OrderListComponent implements OnInit {
     if (item.showReason === 1){
       this.router.navigate([this.NAVIGATION.PROBLEMS.url, {  orderKey: item.orderKey}])
     }
+  }
+
+  onClickExpand(){
+   for (let data of this.tableObject.value) {
+    this.expandedRowKeys[data.route] = !this.expanded;
+   }
+   this.expanded = !this.expanded;
   }
 }
 

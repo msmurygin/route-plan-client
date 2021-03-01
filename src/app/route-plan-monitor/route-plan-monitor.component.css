@@ -104,9 +104,10 @@
 
 
 .selected_row {
-    text-align: left!important;
     color: #000000!important;
     background-color: rgba(211, 211, 211, 0.534);
+    border-top: 3px solid #000000;
+    border-bottom: 3px solid #000000;
    
 }
 :host ::ng-deep .p-highlight-contextmenu {
@@ -114,7 +115,7 @@
     color: #000000!important;
     background-color: rgba(211, 211, 211, 0.534);
     outline-style: groove;
-    outline-width: 5px;
+    outline-width: 3px;
     outline-color: #565a6d!important;
 }
 

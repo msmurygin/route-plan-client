@@ -466,7 +466,7 @@ export class RoutePlanMonitorComponent implements OnInit  {
   selectedRowStyle : any; // Saving row ref
 
   onRowSelect(event: any, template?: any) {
-   
+   console.log(event)
     // check if previous row has been saved
     if (this.selectedRowStyle){
       let elementChildrens = this.selectedRowStyle.children;
@@ -474,13 +474,16 @@ export class RoutePlanMonitorComponent implements OnInit  {
         if (!child.classList.contains('td_detail_buttons')) {
             child.classList.add(this.selectedRowStyleName)
             child.classList.remove("selected_row")
+            
         }
       }
       
       this.selectedRowStyle.classList.remove("td_detail_no_style")
+      this.selectedRowStyle.classList.remove("p-highlight-contextmenu")
+      
     }
     // prev saved style 
-    this.selectedRowStyle = event['originalEvent'].path[1];
+    this.selectedRowStyle = event instanceof MouseEvent ? event['path'][1] :  event['originalEvent'].path[1];
 
 
     let elementChildrens: HTMLCollection = this.selectedRowStyle.children;
@@ -498,7 +501,9 @@ export class RoutePlanMonitorComponent implements OnInit  {
         child.classList.remove(this.selectedRowStyleName)
         child.classList.add('selected_row')
     }
-    event['originalEvent'].path[1].classList.add("td_detail_no_style")
+    this.selectedRowStyle.classList.add("td_detail_no_style")
+    this.selectedRowStyle.classList.add("p-highlight-contextmenu")
+    //event['originalEvent'].path[1].classList.add("td_detail_no_style")
     
   }
 

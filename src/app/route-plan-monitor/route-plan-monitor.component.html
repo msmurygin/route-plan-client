@@ -136,7 +136,8 @@
           [paginator]="true" [rows]="rows" [showCurrentPageReport]="true" [(first)]="first" 
           currentPageReportTemplate="Показанно с {first} по {last} из {totalRecords} записей" [rowsPerPageOptions]="[5,10,25,50,100]"
           [loading]="loading" 
-          [(contextMenuSelection)]="selectedDetail" [contextMenu]="cm">
+          [(contextMenuSelection)]="selectedDetail" [contextMenu]="cm"
+          >
           <ng-template pTemplate="caption">
             <div class="p-d-flex">
                 <button *ngIf="modifiedRows.length > 0" pButton class="p-button-rounded" label="Сохранить" (click)="save()"></button>
@@ -180,7 +181,7 @@
       </tr>
   </ng-template>
   <ng-template pTemplate="body" let-item let-rowData let-rowIndex="rowIndex">
-      <tr [pContextMenuRow]="item"  [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" >
+      <tr [pContextMenuRow]="item"  [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" (click)="onRowSelect($event)">
           <td [class]="getStyleByShift(item)" *ngIf="false">{{item.rowId}}</td>
           <td style="width: 5%; text-align: center;"  [class]="getStyleByShift(item)">{{item.deliveryDate | date:'dd.MM HH:mm'}}</td>
           <td [class]="getStyleByShift(item)">

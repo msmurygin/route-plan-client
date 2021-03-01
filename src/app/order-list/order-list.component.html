@@ -1,15 +1,17 @@
+
 <p-confirmDialog icon="pi pi-exclamation-triangle" ></p-confirmDialog>
 <div class="page_title">Список заказов на отгрузку в рейсе {{loadUsr2 }}</div>
 <mat-toolbar color="secondary">
     <span class="cube_in_lane_text_style">{{nsqlDescription}}</span>
     <p-badge [value]="nsqlValue" severity="success"></p-badge>
     <div class="spacer"></div>
+    <button (click)="onClickExpand()" type="button" [label]="expanded ? 'Свернуть' : 'Развернуть' " pButton pRipple class="p-button-text p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
     <mat-checkbox class="showdates_checkbox" [(ngModel)]="showDates" color="primary" >Показывать даты</mat-checkbox>
 </mat-toolbar>
 
 <p-contextMenu #tableMenu [model]="menuItems"></p-contextMenu>
 
-<p-table
+<p-table #dataTable
           columnResizeMode="expand"
           class="p-datatable-sm" 
           [value]="orderDataSource" 
@@ -24,7 +26,8 @@
           [expandedRowKeys]="expandedRowKeys"
           (onContextMenuSelect)="onRowSelect($event)"
           (onEditInit)="onEditInit($event)" 
-          (onEditComplete)="onEditComplete($event)">
+          (onEditComplete)="onEditComplete($event)"
+          >
     <ng-template pTemplate="caption">
         <div class="p-d-flex">
             <button *ngIf="modifiedRows.length > 0" pButton class="p-button-rounded" label="Сохранить" (click)="save()"></button>
@@ -84,7 +87,7 @@
             </p-cellEditor>
 
         </th>
-
+      
         <th colspan="3" class="th_header_2_left"    >
             <span class="p-text-bold p-ml-2">{{orders.route}}</span>
         </th>
@@ -135,7 +138,7 @@
                     <p-calendar [(ngModel)]="orders.actualArrivalDate" [readonlyInput]="true" dateFormat="dd.MM.y" showTime="true" hourFormat="24"></p-calendar>
                 </ng-template>
                 <ng-template pTemplate="output">
-                    {{ orders.actualArrivalDate | date:'dd.MM.yy' }}
+                    {{ orders.actualArrivalDate | date:'dd.MM HH:mm' }}
                 </ng-template>
             </p-cellEditor>
         </th>
@@ -151,7 +154,7 @@
                     <p-calendar [(ngModel)]="orders.vehicleLeftDate" [readonlyInput]="true" dateFormat="dd.MM.y" showTime="true" hourFormat="24"></p-calendar>
                 </ng-template>
                 <ng-template pTemplate="output">
-                    {{ orders.vehicleLeftDate | date:'dd.MM.yy' }}
+                    {{ orders.vehicleLeftDate | date:'dd.MM HH:mm' }}
                 </ng-template>
             </p-cellEditor>
        </th>
@@ -160,7 +163,10 @@
     </tr>
 </ng-template>
     <ng-template pTemplate="rowexpansion" let-orderLine let-rowIndex="rowIndex">
-        <tr *ngFor="let detail of getDetail(orderLine) index as i" [pContextMenuRow]="detail" >
+        <tr *ngFor="let detail of getDetail(orderLine) index as i" [pContextMenuRow]="detail" (click)="onRowSelect($event)" >
+            <td class="td_detail">
+                
+            </td>
             <td class="td_detail">
                 
             </td>
@@ -175,7 +181,9 @@
                     {{detail.externalOrderKey2}}
                 </a>
             </td>
-            <td class="td_detail"></td>
+            <td class="td_detail">
+                
+            </td>
             
             <td class="td_detail">{{detail.orderLines}}</td>
             <td class="td_detail">{{detail.leftToPick}}</td>
@@ -226,8 +234,8 @@
             <td class="td_detail">{{detail.selectedCartonIdQty}}</td>
             <td class="td_detail">{{detail.status}}</td>
             <td class="td_detail">{{detail.susr2}}</td>
-            <td class="td_detail" *ngIf="showDates">{{detail.addDate | date:'dd.MM.yy'  }}</td>
-            <td class="td_detail" *ngIf="showDates">{{detail.routeReady | date:'dd.MM.yy'  }}</td>
+            <td class="td_detail" *ngIf="showDates">{{detail.addDate | date:'dd.MM HH:mm'  }}</td>
+            <td class="td_detail" *ngIf="showDates">{{detail.routeReady | date:'dd.MM HH:mm'  }}</td>
             <!-- <td class="td_detail" *ngIf="showDates">{{transformDate(detail.actualArrivalDate) }}</td> -->
             <td class="td_detail edit-cursor" *ngIf="showDates" pEditableColumn [pEditableColumn]="detail" [pEditableColumnField]="'actualArrivalDate'" [pEditableColumnRowIndex]="rowIndex">
                 <p-cellEditor>
@@ -235,16 +243,16 @@
                         <p-calendar [(ngModel)]="detail.actualArrivalDate" [readonlyInput]="true" dateFormat="dd.MM.y" showTime="true" hourFormat="24"></p-calendar>
                     </ng-template>
                     <ng-template pTemplate="output">
-                        {{ detail.actualArrivalDate | date:'dd.MM.yy' }}
+                        {{ detail.actualArrivalDate | date:'dd.MM HH:mm' }}
                     </ng-template>
                 </p-cellEditor>
            </td>
 
 
-            <td class="td_detail" *ngIf="showDates">{{detail.loadStart | date:'dd.MM.yy' }}</td>
-            <td class="td_detail" *ngIf="showDates">{{detail.loadEnd | date:'dd.MM.yy' }}</td>
+            <td class="td_detail" *ngIf="showDates">{{detail.loadStart | date:'dd.MM HH:mm' }}</td>
+            <td class="td_detail" *ngIf="showDates">{{detail.loadEnd | date:'dd.MM HH:mm' }}</td>
             <td class="td_detail" *ngIf="showDates">{{detail.loadDuration }}</td>
-            <td class="td_detail" *ngIf="showDates">{{detail.shipDate | date:'dd.MM.yy' }}</td>
+            <td class="td_detail" *ngIf="showDates">{{detail.shipDate | date:'dd.MM HH:mm' }}</td>
             <!-- <td class="td_detail" *ngIf="showDates">{{transformDate(detail.vehicleLeftDate)}}</td> -->
             <td class="td_detail edit-cursor" *ngIf="showDates" pEditableColumn [pEditableColumn]="detail" [pEditableColumnField]="'vehicleLeftDate'" [pEditableColumnRowIndex]="rowIndex">
                 <p-cellEditor>
@@ -252,7 +260,7 @@
                         <p-calendar [(ngModel)]="detail.vehicleLeftDate" [readonlyInput]="true" dateFormat="dd.MM.y" showTime="true" hourFormat="24"></p-calendar>
                     </ng-template>
                     <ng-template pTemplate="output">
-                        {{ detail.vehicleLeftDate | date:'dd.MM.yy' }}
+                         {{ detail.vehicleLeftDate | date:'dd.MM HH:mm' }}
                     </ng-template>
                 </p-cellEditor>
            </td>
