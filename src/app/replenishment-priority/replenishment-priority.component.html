@@ -3,31 +3,31 @@
     <mat-grid-tile>
         <mat-form-field class="input-field">
             <mat-label>Код товара</mat-label>
-            <input matInput type="text" [(ngModel)]="sku">
+            <input matInput type="text" [(ngModel)]="sku" (keyup.enter)="searchClicked()">
         </mat-form-field>
     </mat-grid-tile>
     <mat-grid-tile>
         <mat-form-field class="input-field">
             <mat-label>Ячейка</mat-label>
-            <input matInput type="text" [(ngModel)]="loc">
+            <input matInput type="text" [(ngModel)]="loc" (keyup.enter)="searchClicked()">
         </mat-form-field>
     </mat-grid-tile>
     <mat-grid-tile>
         <mat-form-field class="input-field">
             <mat-label>Зона размещения</mat-label>
-            <input matInput type="text" [(ngModel)]="putawayzone">
+            <input matInput type="text" [(ngModel)]="putawayzone" (keyup.enter)="searchClicked()">
         </mat-form-field>
     </mat-grid-tile>
     <mat-grid-tile>
         <span class="search_btn">
-            <button mat-icon-button aria-label="Кнопка поиска" (click)="searchClicked()">
+            <button mat-icon-button aria-label="Кнопка поиска" (click)="searchClicked()" (keyup.enter)="searchClicked()">
             <mat-icon>search</mat-icon>
             </button>
         </span>
     </mat-grid-tile>
   </mat-grid-list>
   <div class="spacer"></div>
-  <p-table  class="p-datatable-sm" 
+  <p-table  class="p-datatable-sm"  (keyup.enter)="searchClicked()"
           [value]="dataSource" 
           (onEditInit)="onEditInit($event)"
           (onEditComplete)="onEditComplete($event)"
