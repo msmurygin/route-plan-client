@@ -138,6 +138,7 @@
           [loading]="loading" 
           [(contextMenuSelection)]="selectedDetail" [contextMenu]="cm"
           >
+
           <ng-template pTemplate="caption">
             <div class="p-d-flex">
                 <button *ngIf="modifiedRows.length > 0" pButton class="p-button-rounded" label="Сохранить" (click)="save()"></button>
