@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api/menuitem';
 import { ControllerURL } from 'src/environments/controllers';
 import { NavigationURL } from 'src/environments/navigation';
@@ -16,7 +16,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   orderDetailDataSource : OrderDetailTable[]
   title                 : string = "";
   navi                  = NavigationURL;
-  constructor(private route : ActivatedRoute,   private service : RestService,) { }
+  constructor(private route : ActivatedRoute,   private service : RestService,  private router:  Router) { }
   
   
   ngOnDestroy(): void {}
@@ -60,5 +60,8 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  onRowSelect(event, queryParams){
+    this.router.navigate([this.navi.SKU_BALANCE.url], {queryParams: queryParams })
 
+  }
 }

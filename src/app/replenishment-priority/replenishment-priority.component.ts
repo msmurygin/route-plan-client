@@ -43,7 +43,7 @@ export class ReplenishmentPriorityComponent implements OnInit {
   loc: string;
   putawayzone: string;
 
-  priorities: IPriorities[] = [{code: 1, name : '1 - Приоритет'}, {code: 2, name : '2 - Приоритет'}, {code: 3, name : '3 - Приоритет'}, {code: 4, name : '4 - Приоритет'}];
+  priorities: IPriorities[] = [{code: -10000, name: "не выбрано"}, {code: 1, name : '1 - Приоритет'}, {code: 2, name : '2 - Приоритет'}, {code: 3, name : '3 - Приоритет'}, {code: 4, name : '4 - Приоритет'}];
   
   modifiedRows : IReplenishmentPriorityDataSource[]= []
 
@@ -76,12 +76,28 @@ export class ReplenishmentPriorityComponent implements OnInit {
   }
 
 
-  onEditInit(event): void {
-    //console.log(event);
-    //console.log('Edit Init Event Called');
+  focusValue : any;
+  onEditInit(event) : void {
+    this.focusValue = event.data[event.field] 
   }
+
   onEditComplete(event): void {
-    this.modifiedRows.push(event.data)
+    console.log(event);
+    if (event.data['priority'] == -10000 || event.data[event.field] == " " || event.data[event.field] == this.focusValue) {
+      event.data['priority']  =  this.focusValue
+      return;
+    
+    }
+    if (this.modifiedRows){
+      let alreadyModified : any = this.modifiedRows.filter(item => item.serialKey == event.data['serialKey'])
+      if (alreadyModified.length > 0) {
+        let modifiedObject = alreadyModified[0];
+        let index = this.modifiedRows.indexOf(modifiedObject);
+        if (index >-1) this.modifiedRows.splice(index, 1);
+      }
+      this.modifiedRows.push(event.data)
+     
+    }
     console.log(this.modifiedRows);
   }
 

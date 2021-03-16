@@ -36,6 +36,10 @@
         </div>
     </ng-template>
   <ng-template pTemplate="header">
+    <tr>
+        <th class="th_header th_heeader_center" colspan="22" *ngIf="showDates"></th>
+        <th class="th_header th_heeader_center" colspan="8" *ngIf="showDates">Дата и время</th>
+    </tr>
       <tr>
         <th class="th_header"></th>
         <th class="th_header">Ост.</th>

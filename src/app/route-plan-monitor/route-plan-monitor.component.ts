@@ -369,7 +369,7 @@ export class RoutePlanMonitorComponent implements OnInit  {
   toogleAutoUpdate(){
     this.autoUpdate = !this.autoUpdate;
     if (this.autoUpdate){
-       this.refreshIntervalId =  setInterval(() => { this.searchClicked();}, 10000);
+       this.refreshIntervalId =  setInterval(() => { this.searchClicked();}, 47000);
     }else{
       clearInterval(this.refreshIntervalId)
     }

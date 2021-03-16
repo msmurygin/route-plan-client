@@ -18,7 +18,7 @@ currentPageReportTemplate="Показанно с {first} по {last} из {total
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item>
-        <tr>
+        <tr (click)="onRowSelect($event, { sku: item.sku, descr: item.descr, pack: item.packKey, openQty: item.openQty })">
             <td class="td_detail">{{item.orderLineNumber}}</td>
             <td class="td_detail">
             <a [routerLink]="[navi.SKU_BALANCE.url]" 

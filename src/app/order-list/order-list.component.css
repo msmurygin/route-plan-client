@@ -40,6 +40,7 @@
   /* padding: 0!important; */
   text-align: center!important;
   background-color: rgba(211, 211, 211, 0.801)!important;
+  border: 1px solid #565a6d!important;
 }
 
 .th_header_2 {
@@ -114,3 +115,9 @@
 }
 
 *:focus {outline:none !important}
+
+
+.th_heeader_center {
+  text-align: center!important;
+  border: 1px solid #565a6d!important;
+}

@@ -17,7 +17,7 @@
     font-size: 0.7em!important;
     text-align: center!important;
     background-color: rgba(131, 131, 131, 0.801)!important;
-    /*border-bottom: 1px solid #3f51b5!important; */
+    border: 1px solid #565a6d!important;
 }
 
 .th_header_small {
@@ -26,6 +26,7 @@
     text-align: center!important;
     background-color: rgba(211, 211, 211, 0.486)!important;
     border-bottom: 1px solid #000000!important;
+    border: 1px solid #565a6d!important;
 }
 
 
@@ -35,7 +36,8 @@
     font-size : 0.7em!important;
     font-weight: bold;
     text-align: center!important;
-    background-color: rgba(211, 211, 211, 0.109)
+    background-color: rgba(211, 211, 211, 0.109);
+    cursor: pointer;
 }
 .left-aligin-text {
     text-align: left!important;

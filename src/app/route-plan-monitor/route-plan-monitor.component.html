@@ -95,6 +95,7 @@
 
 <!-- HeaderTable-->
 <p-table [value]="dataSource" styleClass="p-datatable-gridlines">
+
   <ng-template pTemplate="header">
       <tr>
           <th class="th_header_small">Задачи план.</th>
@@ -147,6 +148,10 @@
             </div>
         </ng-template>
   <ng-template pTemplate="header">
+    <tr>
+        <th class="th_header th_heeader_center" colspan="20" *ngIf="showDates"></th>
+        <th class="th_header th_heeader_center" colspan="8" *ngIf="showDates">Дата и время</th>
+    </tr>
       <tr>
         <th class="th_header" *ngIf="false">№</th>
         <th class="th_header" style="width: 5%; text-align: center;"  pSortableColumn="deliveryDate">Дата<br>ожидания<br>отгрузки<p-sortIcon field="deliveryDate"></p-sortIcon></th>
