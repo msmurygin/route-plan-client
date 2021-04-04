@@ -13,7 +13,6 @@
 
 :host ::ng-deep .p-datatable .p-datatable-tbody > tr  {
    border-top: 2px solid #6d6d6d6e;
-
    line-height: 15px!important;
 }
 
@@ -113,17 +112,16 @@
 .selected_row {
     color: #000000!important;
     background-color: rgba(211, 211, 211, 0.534);
-    border-top: 3px solid #000000;
-    border-bottom: 3px solid #000000;
+    border-top: 3px solid #565a6d;
+    border-bottom: 3px solid #565a6d;
+  
    
 }
 :host ::ng-deep .p-highlight-contextmenu {
     text-align: left!important;
     color: #000000!important;
     background-color: rgba(211, 211, 211, 0.534);
-    outline-style: groove;
-    outline-width: 3px;
-    outline-color: #565a6d!important;
+    outline: none;
 }
 
 

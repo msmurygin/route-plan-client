@@ -82,7 +82,7 @@ export class ReplenishmentPriorityComponent implements OnInit {
   }
 
   onEditComplete(event): void {
-    console.log(event);
+    //console.log(event);
     if (event.data['priority'] == -10000 || event.data[event.field] == " " || event.data[event.field] == this.focusValue) {
       event.data['priority']  =  this.focusValue
       return;
@@ -125,6 +125,12 @@ export class ReplenishmentPriorityComponent implements OnInit {
 
   isAdmin(): boolean {
     return this.auth.isAdmin();
+  }
+
+
+  onBlurEvent(event){
+    console.log(event)
+    //this.onEditComplete(event)
   }
 
 }
