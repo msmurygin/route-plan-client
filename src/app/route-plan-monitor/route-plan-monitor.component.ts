@@ -73,7 +73,7 @@ export class RoutePlanMonitorComponent implements OnInit  {
   statuses             : Codelkup[]    = [];
   dataSource           : PlanRouteHeaderTable[];
   detailDataSource     : PlanRouteDetailTable[] = [];
- 
+  selectedDataSource   : PlanRouteDetailTable[] = [];
   loading              : boolean  = false;
 
   selectedDetail       : PlanRouteDetailTable;
@@ -466,7 +466,11 @@ export class RoutePlanMonitorComponent implements OnInit  {
   selectedRowStyle : any; // Saving row ref
 
   onRowSelect(event: any, template?: any) {
-   console.log(event)
+    console.log(event)
+    
+    if (event.originalEvent && event.originalEvent.srcElement.tagName.toLowerCase() ==='a'){
+      return;
+    }
     // check if previous row has been saved
     if (this.selectedRowStyle){
       let elementChildrens = this.selectedRowStyle.children;
@@ -503,8 +507,6 @@ export class RoutePlanMonitorComponent implements OnInit  {
     }
     this.selectedRowStyle.classList.add("td_detail_no_style")
     this.selectedRowStyle.classList.add("p-highlight-contextmenu")
-    //event['originalEvent'].path[1].classList.add("td_detail_no_style")
-    
   }
 
   isAdmin(): boolean {
